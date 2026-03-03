@@ -33,6 +33,9 @@ function doGet(e) {
       case 'getTypeStats':
         result = handleGetTypeStats(params);
         break;
+      case 'searchQuestions':
+        result = handleSearchQuestions(params);
+        break;
       case 'init':
         result = initializeSheets();
         break;
@@ -64,6 +67,9 @@ function doPost(e) {
         break;
       case 'answerQuestion':
         result = handleAnswerQuestion(body);
+        break;
+      case 'aiChat':
+        result = handleAiChat(body);
         break;
       default:
         result = { error: 'Unknown action: ' + action };

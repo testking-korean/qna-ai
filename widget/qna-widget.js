@@ -34,6 +34,14 @@
       this.faqSortBy = 'questions';
       this.faqDisplayCount = 10;
 
+      // AI 검색 & 챗봇
+      this.searchQuery = '';
+      this.searchResults = null;
+      this.searchLoading = false;
+      this.aiChatOpen = false;
+      this.aiChatHistory = [];
+      this.aiChatLoading = false;
+
       this.init();
     }
 
@@ -152,7 +160,11 @@
       var totalUniqueClickers = Math.max(1, self.totalUniqueClickers);
       var totalUniqueQuestioners = Math.max(1, typeData.reduce(function (sum, item) { return sum + item.uniqueQuestioners; }, 0));
 
-      let html = '<div class="qna-screen1">';
+      let html = this.renderSearchBar();
+      if (this.searchResults !== null) {
+        html += this.renderSearchResults();
+      }
+      html += '<div class="qna-screen1">';
       html += '<div class="qna-screen1-header">';
       html += '<div class="qna-screen1-title">질문 유형</div>';
       html += '<div class="qna-screen1-note">클릭한 사람은 로그인한 회원만 각 유형별 1회씩 집계합니다</div>';
@@ -186,8 +198,11 @@
 
       // 질문 등록 버튼/폼
       html += this.renderSubmitForm();
+      if (this.aiChatOpen) html += this.renderAiChatModal();
       this.render(html);
+      this.bindSearchEvents();
       this.bindScreen1Events();
+      if (this.aiChatOpen) this.bindAiChatEvents();
     }
 
     // ============================================
@@ -213,7 +228,11 @@
       });
       typeData.sort(function (a, b) { return b.count - a.count; });
 
-      let html = '<div class="qna-screen2">';
+      let html = this.renderSearchBar();
+      if (this.searchResults !== null) {
+        html += this.renderSearchResults();
+      }
+      html += '<div class="qna-screen2">';
 
       // 돌아가기 버튼 (nav-bar 바깥)
       html += '<button class="qna-back-btn" id="qna-back-btn">&larr; 돌아가기</button>';
@@ -391,8 +410,11 @@
 
       // 질문 등록 버튼/폼
       html += this.renderSubmitForm();
+      if (this.aiChatOpen) html += this.renderAiChatModal();
       this.render(html);
+      this.bindSearchEvents();
       this.bindScreen2Events();
+      if (this.aiChatOpen) this.bindAiChatEvents();
     }
 
     // ============================================
@@ -590,6 +612,239 @@
           }
         });
       }
+    }
+
+    // ============================================
+    // AI 검색바
+    // ============================================
+    renderSearchBar() {
+      let html = '<div class="qna-search-section">';
+      html += '<div class="qna-search-bar">';
+      html += '<input type="text" class="qna-search-input" id="qna-search-input" placeholder="궁금한 사항을 찾아보거나 입력하세요" value="' + this.escapeHtml(this.searchQuery) + '">';
+      html += '<button class="qna-search-btn" id="qna-search-btn" ' + (this.searchLoading ? 'disabled' : '') + '>' + (this.searchLoading ? '검색 중...' : '검색') + '</button>';
+      html += '</div>';
+      html += '<div class="qna-search-hint">입력하시면 AI가 가장 유사한 질문과 답변을 찾아줍니다</div>';
+      html += '</div>';
+      return html;
+    }
+
+    renderSearchResults() {
+      if (this.searchResults === null) return '';
+      const self = this;
+
+      let html = '<div class="qna-search-results">';
+
+      if (this.searchResults.length > 0) {
+        html += '<div class="qna-search-results-title">검색 결과 ' + this.searchResults.length + '건</div>';
+        this.searchResults.forEach(function (r) {
+          html += '<div class="qna-search-result-item" data-result-qid="' + r.question_id + '">';
+          html += '<div class="qna-search-result-q">';
+          html += '<span class="qna-search-result-q-text">' + self.escapeHtml(r.question_text) + '</span>';
+          html += '<span class="qna-search-result-score">유사도 ' + r.score + '%</span>';
+          html += '</div>';
+          html += '<div class="qna-search-result-a" id="qna-sr-a-' + r.question_id + '">';
+          if (r.answer_text && r.status === 'answered') {
+            html += '<div class="qna-search-result-answer">' + self.escapeHtml(r.answer_text) + '</div>';
+          } else {
+            html += '<div class="qna-search-result-answer pending">아직 답변이 등록되지 않았습니다.</div>';
+          }
+          html += '</div>';
+          html += '</div>';
+        });
+      } else {
+        html += '<div class="qna-search-empty">유사한 질문을 찾지 못했습니다.</div>';
+      }
+
+      html += '<div class="qna-search-ai-prompt">';
+      html += '<p>원하는 답변을 찾지 못하셨나요?</p>';
+      html += '<button class="qna-ai-chat-open-btn" id="qna-ai-chat-open">AI 상담사에게 물어보기</button>';
+      html += '</div>';
+
+      html += '</div>';
+      return html;
+    }
+
+    // ============================================
+    // AI 챗봇 모달
+    // ============================================
+    renderAiChatModal() {
+      const self = this;
+      let html = '<div class="qna-ai-chat-overlay" id="qna-ai-overlay">';
+      html += '<div class="qna-ai-chat-modal">';
+      html += '<div class="qna-ai-chat-header">';
+      html += '<span>AI 상담사</span>';
+      html += '<button class="qna-ai-chat-close" id="qna-ai-close">&times;</button>';
+      html += '</div>';
+      html += '<div class="qna-ai-chat-body" id="qna-ai-body">';
+
+      if (this.aiChatHistory.length === 0) {
+        html += '<div class="qna-ai-chat-welcome">안녕하세요! 제품에 대해 궁금한 점을 물어보세요.</div>';
+      }
+
+      this.aiChatHistory.forEach(function (msg) {
+        html += '<div class="qna-ai-chat-message ' + msg.role + '">';
+        html += '<div class="qna-ai-chat-label">' + (msg.role === 'user' ? '고객' : 'AI') + '</div>';
+        html += '<div class="qna-ai-chat-text">' + self.escapeHtml(msg.text) + '</div>';
+        html += '</div>';
+      });
+
+      if (this.aiChatLoading) {
+        html += '<div class="qna-ai-chat-message ai">';
+        html += '<div class="qna-ai-chat-label">AI</div>';
+        html += '<div class="qna-ai-chat-text loading">답변을 생성하고 있습니다...</div>';
+        html += '</div>';
+      }
+
+      html += '</div>';
+      html += '<div class="qna-ai-chat-input-area">';
+      html += '<input type="text" class="qna-ai-chat-input" id="qna-ai-input" placeholder="질문을 입력하세요...">';
+      html += '<button class="qna-ai-chat-send" id="qna-ai-send">보내기</button>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    // ============================================
+    // 검색 이벤트
+    // ============================================
+    bindSearchEvents() {
+      const self = this;
+
+      var searchBtn = this.container.querySelector('#qna-search-btn');
+      var searchInput = this.container.querySelector('#qna-search-input');
+
+      if (searchBtn) {
+        searchBtn.addEventListener('click', function () {
+          self.performSearch();
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            self.performSearch();
+          }
+        });
+      }
+
+      // 검색 결과 아이템 토글
+      this.container.querySelectorAll('.qna-search-result-item').forEach(function (item) {
+        var qEl = item.querySelector('.qna-search-result-q');
+        if (qEl) {
+          qEl.addEventListener('click', function () {
+            var qid = item.getAttribute('data-result-qid');
+            var answerEl = self.container.querySelector('#qna-sr-a-' + qid);
+            if (answerEl) {
+              answerEl.classList.toggle('open');
+              this.classList.toggle('open');
+            }
+          });
+        }
+      });
+
+      // AI 상담사 열기 버튼
+      var aiOpenBtn = this.container.querySelector('#qna-ai-chat-open');
+      if (aiOpenBtn) {
+        aiOpenBtn.addEventListener('click', function () {
+          self.aiChatOpen = true;
+          if (self.searchQuery && self.aiChatHistory.length === 0) {
+            self.sendAiChat(self.searchQuery);
+          } else {
+            self.renderCurrentView();
+          }
+        });
+      }
+    }
+
+    bindAiChatEvents() {
+      const self = this;
+
+      var closeBtn = this.container.querySelector('#qna-ai-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          self.aiChatOpen = false;
+          self.renderCurrentView();
+        });
+      }
+
+      var overlay = this.container.querySelector('#qna-ai-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay) {
+            self.aiChatOpen = false;
+            self.renderCurrentView();
+          }
+        });
+      }
+
+      var sendBtn = this.container.querySelector('#qna-ai-send');
+      var aiInput = this.container.querySelector('#qna-ai-input');
+
+      if (sendBtn) {
+        sendBtn.addEventListener('click', function () {
+          var msg = aiInput ? aiInput.value.trim() : '';
+          if (msg) self.sendAiChat(msg);
+        });
+      }
+
+      if (aiInput) {
+        aiInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            var msg = aiInput.value.trim();
+            if (msg) self.sendAiChat(msg);
+          }
+        });
+        aiInput.focus();
+      }
+
+      var chatBody = this.container.querySelector('#qna-ai-body');
+      if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async performSearch() {
+      var input = this.container.querySelector('#qna-search-input');
+      var query = input ? input.value.trim() : '';
+      if (!query) return;
+
+      this.searchQuery = query;
+      this.searchLoading = true;
+      this.searchResults = null;
+      this.renderCurrentView();
+
+      try {
+        var res = await this.apiGet('searchQuestions', {
+          product_id: this.productId,
+          query: query
+        });
+        this.searchResults = res.results || [];
+      } catch (err) {
+        this.searchResults = [];
+      }
+
+      this.searchLoading = false;
+      this.renderCurrentView();
+    }
+
+    async sendAiChat(message) {
+      this.aiChatHistory.push({ role: 'user', text: message });
+      this.aiChatLoading = true;
+      this.aiChatOpen = true;
+      this.renderCurrentView();
+
+      try {
+        var res = await this.apiPost('aiChat', {
+          product_id: this.productId,
+          message: message,
+          history: this.aiChatHistory.filter(function (h) { return h.role !== undefined; }).slice(0, -1)
+        });
+        this.aiChatHistory.push({ role: 'ai', text: res.answer || '답변을 생성할 수 없습니다.' });
+      } catch (err) {
+        this.aiChatHistory.push({ role: 'ai', text: '죄송합니다. 일시적인 오류가 발생했습니다.' });
+      }
+
+      this.aiChatLoading = false;
+      this.renderCurrentView();
     }
 
     // ============================================

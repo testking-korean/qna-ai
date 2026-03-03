@@ -664,6 +664,7 @@
           case 'getQuestions': return respond(buildQuestions(params));
           case 'getQuestionDetail': return respond(buildQuestionDetail(params));
           case 'getTypeStats': return respond(buildTypeStats());
+          case 'searchQuestions': return respond(buildSearchQuestions(params));
           default: return respond({ error: 'Unknown action' });
         }
       }
@@ -686,6 +687,8 @@
             var q = MOCK_QUESTIONS.find(function(q) { return q.question_id === body.question_id; });
             if (q) q.click_count++;
             return respond({ success: true });
+          case 'aiChat':
+            return respond(buildAiChat(body));
           default:
             return respond({ success: true });
         }
@@ -859,6 +862,73 @@
           sub_type_stats: subTypeStats,
           question_clickers: questionClickerCounts
         };
+      }
+
+      function buildSearchQuestions(params) {
+        var query = (params.query || '').toLowerCase();
+        if (!query) return { success: true, results: [] };
+
+        var results = [];
+        MOCK_QUESTIONS.forEach(function(q) {
+          var qText = q.question_text.toLowerCase();
+          var aText = (q.answer_text || '').toLowerCase();
+          var score = 0;
+
+          var words = query.split(/\s+/);
+          words.forEach(function(word) {
+            if (word.length < 2) return;
+            if (qText.indexOf(word) !== -1) score += 30;
+            if (aText.indexOf(word) !== -1) score += 10;
+          });
+
+          if (qText.indexOf(query) !== -1) score += 40;
+
+          if (score >= 30) {
+            score = Math.min(score, 95);
+            results.push({
+              question_id: q.question_id,
+              question_text: q.question_text,
+              answer_text: q.answer_text,
+              category_id: q.category_id,
+              status: q.status,
+              score: score,
+              related_count: q.related_count || 1
+            });
+          }
+        });
+
+        results.sort(function(a, b) { return b.score - a.score; });
+        results = results.slice(0, 5);
+
+        return { success: true, results: results };
+      }
+
+      function buildAiChat(body) {
+        var message = (body.message || '').toLowerCase();
+
+        // 관련 Q&A에서 키워드 매칭
+        var bestMatch = null;
+        var bestScore = 0;
+        MOCK_QUESTIONS.forEach(function(q) {
+          if (q.status !== 'answered') return;
+          var score = 0;
+          var words = message.split(/\s+/);
+          words.forEach(function(word) {
+            if (word.length < 2) return;
+            if (q.question_text.toLowerCase().indexOf(word) !== -1) score += 2;
+            if ((q.answer_text || '').toLowerCase().indexOf(word) !== -1) score += 1;
+          });
+          if (score > bestScore) { bestScore = score; bestMatch = q; }
+        });
+
+        var answer;
+        if (bestMatch && bestScore >= 2) {
+          answer = bestMatch.answer_text;
+        } else {
+          answer = '정확한 답변을 위해 판매자에게 직접 문의해주세요. 고객센터: 1588-XXXX';
+        }
+
+        return { success: true, answer: answer };
       }
 
     })();
