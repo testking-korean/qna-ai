@@ -169,9 +169,6 @@
       html += '<div class="qna-browse-section">';
       html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
       html += '<div class="qna-screen1">';
-      html += '<div class="qna-screen1-header">';
-      html += '<div class="qna-screen1-title">질문 유형</div>';
-      html += '</div>';
       html += '<div class="qna-sort-row">';
       html += '<button class="qna-sort-btn' + (self.typeSortBy === 'questions' ? ' active' : '') + '" data-sort="questions" data-target="type">질문 많은 순</button>';
       html += '<button class="qna-sort-btn' + (self.typeSortBy === 'clicks' ? ' active' : '') + '" data-sort="clicks" data-target="type">클릭 많은 순</button>';
