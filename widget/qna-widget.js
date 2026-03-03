@@ -160,14 +160,17 @@
       var totalUniqueClickers = Math.max(1, self.totalUniqueClickers);
       var totalUniqueQuestioners = Math.max(1, typeData.reduce(function (sum, item) { return sum + item.uniqueQuestioners; }, 0));
 
-      let html = this.renderSearchBar();
+      let html = '<div class="qna-main-section">';
+      html += '<div class="qna-main-title">질문하기</div>';
+      html += this.renderSearchBar();
       if (this.searchResults !== null) {
         html += this.renderSearchResults();
       }
+      html += '<div class="qna-browse-section">';
+      html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
       html += '<div class="qna-screen1">';
       html += '<div class="qna-screen1-header">';
       html += '<div class="qna-screen1-title">질문 유형</div>';
-      html += '<div class="qna-screen1-note">클릭한 사람은 로그인한 회원만 각 유형별 1회씩 집계합니다</div>';
       html += '</div>';
       html += '<div class="qna-sort-row">';
       html += '<button class="qna-sort-btn' + (self.typeSortBy === 'questions' ? ' active' : '') + '" data-sort="questions" data-target="type">질문 많은 순</button>';
@@ -194,10 +197,10 @@
       });
 
       html += '</div>'; // .qna-type-grid
+      html += '<div class="qna-screen1-note">클릭한 사람은 로그인한 회원만 각 유형별 1회씩 집계합니다</div>';
       html += '</div>'; // .qna-screen1
-
-      // 질문 등록 버튼/폼
-      html += this.renderSubmitForm();
+      html += '</div>'; // .qna-browse-section
+      html += '</div>'; // .qna-main-section
       if (this.aiChatOpen) html += this.renderAiChatModal();
       this.render(html);
       this.bindSearchEvents();
@@ -228,10 +231,14 @@
       });
       typeData.sort(function (a, b) { return b.count - a.count; });
 
-      let html = this.renderSearchBar();
+      let html = '<div class="qna-main-section">';
+      html += '<div class="qna-main-title">질문하기</div>';
+      html += this.renderSearchBar();
       if (this.searchResults !== null) {
         html += this.renderSearchResults();
       }
+      html += '<div class="qna-browse-section">';
+      html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
       html += '<div class="qna-screen2">';
 
       // 돌아가기 버튼 (nav-bar 바깥)
@@ -407,9 +414,8 @@
       }
 
       html += '</div>'; // .qna-screen2
-
-      // 질문 등록 버튼/폼
-      html += this.renderSubmitForm();
+      html += '</div>'; // .qna-browse-section
+      html += '</div>'; // .qna-main-section
       if (this.aiChatOpen) html += this.renderAiChatModal();
       this.render(html);
       this.bindSearchEvents();
@@ -619,6 +625,7 @@
     // ============================================
     renderSearchBar() {
       let html = '<div class="qna-search-section">';
+      html += '<div class="qna-section-subtitle">질문 검색</div>';
       html += '<div class="qna-search-bar">';
       html += '<input type="text" class="qna-search-input" id="qna-search-input" placeholder="궁금한 사항을 찾아보거나 입력하세요" value="' + this.escapeHtml(this.searchQuery) + '">';
       html += '<button class="qna-search-btn" id="qna-search-btn" ' + (this.searchLoading ? 'disabled' : '') + '>' + (this.searchLoading ? '검색 중...' : '검색') + '</button>';

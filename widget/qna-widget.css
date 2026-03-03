@@ -33,6 +33,30 @@
 }
 
 /* ============================================
+   메인 섹션 구조
+   ============================================ */
+.qna-main-section {
+}
+
+.qna-main-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--qna-text);
+  margin-bottom: 20px;
+}
+
+.qna-section-subtitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--qna-text);
+  margin-bottom: 12px;
+}
+
+.qna-browse-section {
+  margin-top: 4px;
+}
+
+/* ============================================
    Screen 1: 질문유형 카드 그리드
    ============================================ */
 .qna-screen1-header {
@@ -55,8 +79,9 @@
 .qna-screen1-note {
   font-size: 12px;
   color: #999;
-  text-align: right;
+  text-align: left;
   line-height: 1.4;
+  margin-top: 12px;
 }
 
 .qna-sort-row {
