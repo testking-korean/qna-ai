@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카페24 상세페이지 - QnA Insight 데모</title>
+  <link rel="stylesheet" href="qna-widget.css">
+  <style>
+    /* ============================================
+       카페24 상세페이지 시뮬레이션 스타일
+       전체 가로 최대 1000px
+       ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding-bottom: 60px; /* 하단 고정메뉴 높이만큼 */
+    }
+
+    /* 페이지 전체 컨테이너 */
+    .page-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+    }
+
+    /* ── 상품 상단 영역 ── */
+    .product-top {
+      display: flex;
+      gap: 24px;
+      padding: 24px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .product-image {
+      flex-shrink: 0;
+      width: 420px;
+      height: 420px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bbb;
+      font-size: 14px;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 8px;
+    }
+
+    .product-brand {
+      font-size: 13px;
+      color: #888;
+      letter-spacing: 1px;
+    }
+
+    .product-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.4;
+    }
+
+    .product-price-area {
+      margin-top: 8px;
+    }
+
+    .product-price-original {
+      font-size: 14px;
+      color: #aaa;
+      text-decoration: line-through;
+    }
+
+    .product-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .product-discount {
+      font-size: 24px;
+      font-weight: 800;
+      color: #e74c3c;
+    }
+
+    .product-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .product-meta-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .product-meta-label {
+      color: #999;
+      min-width: 70px;
+    }
+
+    .product-stars {
+      color: #f59e0b;
+      font-size: 15px;
+    }
+
+    .product-stars span {
+      color: #666;
+      font-size: 13px;
+      margin-left: 4px;
+    }
+
+    .product-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .btn-cart {
+      flex: 1;
+      padding: 14px;
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-buy {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      background: #111;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* ── 섹션 콘텐츠 영역 ── */
+    .section-content {
+      min-height: 400px;
+    }
+
+    .section-panel {
+      display: none;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    /* 상세페이지 섹션 */
+    .detail-section {
+      padding: 40px 24px;
+    }
+
+    .detail-placeholder {
+      text-align: center;
+      color: #bbb;
+      padding: 80px 0;
+    }
+
+    .detail-placeholder .icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    /* 리뷰 섹션 */
+    .review-section {
+      padding: 24px;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .review-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .review-count {
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .review-card {
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .review-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .review-stars {
+      color: #f59e0b;
+      font-size: 13px;
+    }
+
+    .review-author {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .review-text {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    /* QnA 섹션 */
+    .qna-section {
+      padding: 24px;
+    }
+
+    /* ── 하단 고정 탭 메뉴 ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1000px;
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      z-index: 1000;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+    }
+
+    .bottom-nav-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 16px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      position: relative;
+    }
+
+    .bottom-nav-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 25%;
+      height: 50%;
+      width: 1px;
+      background: #e8e8e8;
+    }
+
+    .bottom-nav-item:hover {
+      color: #555;
+      background: #fafafa;
+    }
+
+    .bottom-nav-item.active {
+      color: #111;
+      font-weight: 700;
+    }
+
+    .bottom-nav-item.active .nav-icon {
+      color: #2563eb;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    .nav-badge {
+      position: absolute;
+      top: 8px;
+      right: calc(50% - 36px);
+      background: #e74c3c;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 8px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* ── 데모 알림 배너 ── */
+    .demo-banner {
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      text-align: center;
+      padding: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .demo-banner strong {
+      color: #60a5fa;
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 768px) {
+      .product-top {
+        flex-direction: column;
+      }
+
+      .product-image {
+        width: 100%;
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 데모 알림 -->
+  <div class="demo-banner">
+    <strong>DEMO</strong> &mdash; 목업 데이터로 동작하는 QnA Insight 위젯 데모입니다
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- ── 상품 상단 영역 ── -->
+    <div class="product-top">
+      <div class="product-image">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <rect width="120" height="120" rx="12" fill="#e8e8e8"/>
+          <path d="M35 85L50 60L65 75L80 50L95 85H35Z" fill="#ccc"/>
+          <circle cx="48" cy="42" r="10" fill="#ccc"/>
+          <text x="60" y="108" text-anchor="middle" fill="#aaa" font-size="11">상품 이미지</text>
+        </svg>
+      </div>
+
+      <div class="product-info">
+        <div class="product-brand">TOWEL WARM</div>
+        <div class="product-name">프리미엄 전기 수건건조기 120W (2color)</div>
+
+        <div class="product-price-area">
+          <div class="product-price-original">129,000원</div>
+          <div class="product-price-row">
+            <span class="product-discount">31%</span>
+            <span class="product-price">89,000원</span>
+          </div>
+        </div>
+
+        <div class="product-meta">
+          <div class="product-meta-row">
+            <span class="product-meta-label">평점</span>
+            <span class="product-stars">&#9733;&#9733;&#9733;&#9733;&#9734; <span>4.5 (312)</span></span>
+          </div>
+          <div class="product-meta-row">
+            <span class="product-meta-label">배송</span>
+            <span>무료배송 | 1~2일 내 출고</span>
+          </div>
+          <div class="product-meta-row">
+            <span class="product-meta-label">색상</span>
+            <span>폴리싱 실버 / 무광 블랙</span>
+          </div>
+          <div class="product-meta-row">
+            <span class="product-meta-label">사양</span>
+            <span>120W / 530×830mm / SUS304</span>
+          </div>
+        </div>
+
+        <div class="product-buttons">
+          <button class="btn-cart">장바구니</button>
+          <button class="btn-buy">바로구매</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 섹션 콘텐츠 ── -->
+    <div class="section-content">
+
+      <!-- 상세페이지 -->
+      <div class="section-panel active" id="panel-detail">
+        <div class="detail-section">
+          <div class="detail-placeholder">
+            <span class="icon">&#128083;</span>
+            <p>상세 이미지 및 설명이 이 영역에 표시됩니다</p>
+            <p style="font-size:12px; margin-top:8px; color:#ccc;">하단 탭에서 [QnA]를 눌러보세요</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 리뷰 -->
+      <div class="section-panel" id="panel-review">
+        <div class="review-section">
+          <div class="review-header">
+            <h3>구매 리뷰</h3>
+            <span class="review-count">312개</span>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card-top">
+              <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="review-author">김*수 | 무광 블랙 | 2026.02.26</span>
+            </div>
+            <div class="review-text">욕실에 딱 맞게 설치했어요. 아침마다 보송보송한 수건 쓸 수 있어서 너무 좋습니다. 전기세도 거의 안 나와요.</div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card-top">
+              <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+              <span class="review-author">이*진 | 폴리싱 실버 | 2026.02.24</span>
+            </div>
+            <div class="review-text">호텔 느낌 나서 인테리어 효과도 좋아요. 다만 실버는 지문이 좀 보여서 가끔 닦아줘야 합니다.</div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-card-top">
+              <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="review-author">박*현 | 무광 블랙 | 2026.02.22</span>
+            </div>
+            <div class="review-text">장마철 수건 냄새 때문에 샀는데 대만족! 눅눅한 냄새가 완전히 사라졌어요. 셀프 설치도 30분이면 끝납니다.</div>
+          </div>
+
+          <div style="padding: 40px; text-align:center; color:#bbb; font-size:13px;">
+            ... 리뷰 더보기 ...
+          </div>
+        </div>
+      </div>
+
+      <!-- QnA 인사이트 -->
+      <div class="section-panel" id="panel-qna">
+        <div class="qna-section">
+          <div id="qna-insight-widget"
+               data-product-id="PROD_001"
+               data-api-url="https://script.google.com/macros/s/AKfycbwjK2HfpaCdj7mUiJdWvwTAQ_PuqSb3gdMsA0IILyDOTY4ZBS76Qfmj0QK-etP0md7P/exec">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 하단 고정 탭 메뉴 ── -->
+  <nav class="bottom-nav">
+    <button class="bottom-nav-item active" data-target="panel-detail">
+      <span class="nav-icon">&#128196;</span>
+      상세페이지
+    </button>
+    <button class="bottom-nav-item" data-target="panel-review">
+      <span class="nav-icon">&#11088;</span>
+      리뷰
+      <span class="nav-badge">312</span>
+    </button>
+    <button class="bottom-nav-item" data-target="panel-qna">
+      <span class="nav-icon">&#128172;</span>
+      QnA
+      <span class="nav-badge" id="qna-badge">0</span>
+    </button>
+  </nav>
+
+  <!-- ── 하단 탭 전환 스크립트 ── -->
+  <script>
+    document.querySelectorAll('.bottom-nav-item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var target = btn.getAttribute('data-target');
+
+        // 탭 활성화
+        document.querySelectorAll('.bottom-nav-item').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        // 패널 전환
+        document.querySelectorAll('.section-panel').forEach(function(p) { p.classList.remove('active'); });
+        document.getElementById(target).classList.add('active');
+
+        // 섹션 상단으로 스크롤
+        document.querySelector('.section-content').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+  <!-- ── 데모 목업 데이터 ── -->
+  <script>
+    var MOCK_CATEGORIES = [
+      // 7개 level-1
+      { category_id: 'CAT_1', parent_id: '', level: 1, name: '안전/위험', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_2', parent_id: '', level: 1, name: '설치/사용', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_3', parent_id: '', level: 1, name: '제품 사양', product_id: 'PROD_001', sort_order: 3 },
+      { category_id: 'CAT_4', parent_id: '', level: 1, name: '전기/에너지', product_id: 'PROD_001', sort_order: 4 },
+      { category_id: 'CAT_5', parent_id: '', level: 1, name: '배송/교환', product_id: 'PROD_001', sort_order: 5 },
+      { category_id: 'CAT_6', parent_id: '', level: 1, name: '관리/AS', product_id: 'PROD_001', sort_order: 6 },
+      { category_id: 'CAT_7', parent_id: '', level: 1, name: '가격/혜택', product_id: 'PROD_001', sort_order: 7 },
+      // 18개 level-2
+      { category_id: 'CAT_1_1', parent_id: 'CAT_1', level: 2, name: '화상 위험 (아기/어린이)', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_1_2', parent_id: 'CAT_1', level: 2, name: '화재/과열 위험', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_1_3', parent_id: 'CAT_1', level: 2, name: '욕실 방수/감전', product_id: 'PROD_001', sort_order: 3 },
+      { category_id: 'CAT_2_1', parent_id: 'CAT_2', level: 2, name: '설치 방법', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_2_2', parent_id: 'CAT_2', level: 2, name: '설치 위치/공간', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_2_3', parent_id: 'CAT_2', level: 2, name: '사용법/조작', product_id: 'PROD_001', sort_order: 3 },
+      { category_id: 'CAT_3_1', parent_id: 'CAT_3', level: 2, name: '크기/무게', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_3_2', parent_id: 'CAT_3', level: 2, name: '성능/건조 시간', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_3_3', parent_id: 'CAT_3', level: 2, name: '재질/마감', product_id: 'PROD_001', sort_order: 3 },
+      { category_id: 'CAT_4_1', parent_id: 'CAT_4', level: 2, name: '전기세/소비전력', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_4_2', parent_id: 'CAT_4', level: 2, name: '전원/콘센트', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_5_1', parent_id: 'CAT_5', level: 2, name: '배송/설치 서비스', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_5_2', parent_id: 'CAT_5', level: 2, name: '교환/반품', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_6_1', parent_id: 'CAT_6', level: 2, name: '청소/관리법', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_6_2', parent_id: 'CAT_6', level: 2, name: '내구성/보증/AS', product_id: 'PROD_001', sort_order: 2 },
+      { category_id: 'CAT_7_1', parent_id: 'CAT_7', level: 2, name: '할인/쿠폰', product_id: 'PROD_001', sort_order: 1 },
+      { category_id: 'CAT_7_2', parent_id: 'CAT_7', level: 2, name: '결제/적립', product_id: 'PROD_001', sort_order: 2 }
+    ];
+
+    // 모든 질문은 level-2 카테고리에 할당
+    var MOCK_QUESTIONS = [
+      // 안전/위험 > 화상 위험 (아기/어린이)
+      { question_id:'Q_001', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'아이가 만져도 안전한 온도인가요?', answer_text:'표면 온도가 약 50~55°C로 성인에게는 따뜻한 수준이지만, 영유아는 피부가 민감하므로 장시간 접촉 시 저온화상 위험이 있습니다. 아이 손이 닿지 않는 높이(150cm 이상)에 설치하시길 권장합니다.', author_name:'김*수', created_at:'2026-02-28T11:00:00Z', status:'answered', click_count:487, related_count:38 },
+      { question_id:'Q_002', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'13개월 아기가 있는데 화상 위험 없나요?', answer_text:'영유아는 짧은 접촉으로도 저온화상 위험이 있습니다. 반드시 아기 손이 닿지 않는 높이에 설치해주세요. 안전 가드(별매)도 함께 사용하시면 좋습니다.', author_name:'이*진', created_at:'2026-02-27T09:30:00Z', status:'answered', click_count:412, related_count:29 },
+      { question_id:'Q_003', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'표면 온도가 최대 몇 도까지 올라가나요?', answer_text:'최대 표면 온도는 약 55°C입니다. 일반 온수 파이프와 비슷한 온도로, 순간 접촉으로 화상이 나는 수준은 아니지만 장시간 접촉은 피해주세요.', author_name:'박*현', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:324, related_count:21 },
+      // 안전/위험 > 화재/과열 위험
+      { question_id:'Q_004', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'밤새 켜놔도 괜찮나요?', answer_text:'과열 방지 센서(온도 퓨즈)가 내장되어 있어 비정상 과열 시 자동 차단됩니다. 다만 안전을 위해 타이머 기능(2h/4h/8h) 사용을 권장합니다.', author_name:'최*아', created_at:'2026-02-27T15:00:00Z', status:'answered', click_count:523, related_count:42 },
+      { question_id:'Q_005', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'수건 없이 빈 상태로 켜도 되나요?', answer_text:'네, 빈 상태로 작동해도 안전합니다. 과열 방지 센서가 온도를 자동 제어합니다.', author_name:'정*호', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:278, related_count:18 },
+      { question_id:'Q_006', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'과열 방지 기능이 있나요?', answer_text:'네, 온도 퓨즈와 써모스탯이 내장되어 설정 온도 초과 시 자동으로 전원이 차단됩니다.', author_name:'강*미', created_at:'2026-02-24T11:30:00Z', status:'answered', click_count:345, related_count:25 },
+      // 안전/위험 > 욕실 방수/감전
+      { question_id:'Q_007', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'샤워할 때 물이 튀어도 괜찮나요?', answer_text:'IPX4 방수등급으로 생활 방수 수준의 물 튀김에 안전합니다. 다만 직접 물을 끼얹는 것은 피해주세요.', author_name:'조*원', created_at:'2026-02-26T09:00:00Z', status:'answered', click_count:398, related_count:31 },
+      { question_id:'Q_008', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'방수등급이 어떻게 되나요?', answer_text:'IPX4 등급으로, 모든 방향에서의 물 튀김에 대해 보호됩니다.', author_name:'한*정', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_009', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'감전 사고 위험은 없나요?', answer_text:'이중 절연 구조와 접지 설계로 감전 위험을 최소화했습니다. KC 안전인증 제품입니다.', author_name:'윤*석', created_at:'2026-02-24T16:00:00Z', status:'answered', click_count:312, related_count:22 },
+      // 설치/사용 > 설치 방법
+      { question_id:'Q_010', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'벽에 구멍을 뚫어야 하나요?', answer_text:'기본 설치는 벽면 타공(나사 4개) 방식입니다. 부속품(앵커, 나사, 수평계)이 모두 포함되어 있습니다.', author_name:'서*리', created_at:'2026-02-27T10:00:00Z', status:'answered', click_count:456, related_count:35 },
+      { question_id:'Q_011', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'셀프 설치 가능한가요?', answer_text:'전동 드릴만 있으시면 30분 내 셀프 설치 가능합니다. 설치 영상 QR코드가 박스에 포함되어 있습니다.', author_name:'임*빈', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:389, related_count:28 },
+      { question_id:'Q_012', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'석고보드 벽에도 설치 가능한가요?', answer_text:'석고보드 전용 앵커(토글볼트)를 사용하시면 설치 가능합니다. 별도 구매가 필요합니다.', author_name:'나*우', created_at:'2026-02-25T09:00:00Z', status:'answered', click_count:234, related_count:15 },
+      // 설치/사용 > 설치 위치/공간
+      { question_id:'Q_013', product_id:'PROD_001', category_id:'CAT_2_2', question_text:'좁은 욕실(2평)에도 설치 가능한가요?', answer_text:'벽면 설치 제품이라 바닥 공간을 차지하지 않아 좁은 욕실에도 적합합니다.', author_name:'류*은', created_at:'2026-02-26T13:00:00Z', status:'answered', click_count:298, related_count:20 },
+      { question_id:'Q_014', product_id:'PROD_001', category_id:'CAT_2_2', question_text:'세탁실에 설치해도 되나요?', answer_text:'네, 세탁실/베란다/다용도실 어디든 콘센트만 있으면 설치 가능합니다.', author_name:'신*혁', created_at:'2026-02-25T15:00:00Z', status:'answered', click_count:187, related_count:12 },
+      // 설치/사용 > 사용법/조작
+      { question_id:'Q_015', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'수건 몇 장까지 걸 수 있나요?', answer_text:'일반 세면 수건 기준 3~4장, 대형 목욕 수건은 2장까지 걸 수 있습니다.', author_name:'장*희', created_at:'2026-02-27T08:30:00Z', status:'answered', click_count:445, related_count:34 },
+      { question_id:'Q_016', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'타이머 설정은 어떻게 하나요?', answer_text:'전원 버튼을 누를 때마다 2시간 → 4시간 → 8시간 → OFF 순으로 전환됩니다. LED로 현재 설정을 확인할 수 있습니다.', author_name:'오*준', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:367, related_count:26 },
+      { question_id:'Q_017', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'작동 중 소음이 있나요?', answer_text:'무소음 전기 발열 방식으로 소음이 전혀 없습니다. 취침 중에도 사용 가능합니다.', author_name:'배*영', created_at:'2026-02-25T11:00:00Z', status:'answered', click_count:289, related_count:19 },
+      // 제품 사양 > 크기/무게
+      { question_id:'Q_018', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'실제 사이즈가 어떻게 되나요?', answer_text:'가로 530mm × 세로 830mm × 돌출 125mm 입니다.', author_name:'허*연', created_at:'2026-02-26T14:30:00Z', status:'answered', click_count:312, related_count:22 },
+      { question_id:'Q_019', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'무게가 얼마나 나가나요?', answer_text:'본체 무게 약 5kg으로 설치 시 한 사람이 충분히 들 수 있습니다.', author_name:'문*찬', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:198, related_count:13 },
+      { question_id:'Q_020', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'가로 바가 몇 개인가요?', answer_text:'가로 바 7개로 구성되어 수건 3~4장을 동시에 걸 수 있습니다.', author_name:'송*라', created_at:'2026-02-24T09:00:00Z', status:'answered', click_count:156, related_count:9 },
+      // 제품 사양 > 성능/건조 시간
+      { question_id:'Q_021', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'수건이 완전히 마르는데 몇 시간 걸려요?', answer_text:'젖은 수건 기준 약 2~3시간이면 보송보송하게 건조됩니다. 반건조 수건은 1~2시간이면 충분합니다.', author_name:'홍*태', created_at:'2026-02-27T11:00:00Z', status:'answered', click_count:534, related_count:43 },
+      { question_id:'Q_022', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'겨울에도 잘 마르나요?', answer_text:'전기 발열 방식이라 외부 온도에 관계없이 일정한 건조 성능을 유지합니다.', author_name:'백*솔', created_at:'2026-02-26T09:30:00Z', status:'answered', click_count:287, related_count:19 },
+      { question_id:'Q_023', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'수건 눅눅한 냄새가 사라지나요?', answer_text:'네, 지속적인 열 건조로 수건의 습기를 제거하여 눅눅한 냄새를 방지합니다.', author_name:'안*민', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:423, related_count:33 },
+      // 제품 사양 > 재질/마감
+      { question_id:'Q_024', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'스테인리스 스틸인가요?', answer_text:'SUS304 스테인리스 스틸 재질로, 녹과 부식에 강합니다.', author_name:'유*지', created_at:'2026-02-26T11:30:00Z', status:'answered', click_count:265, related_count:17 },
+      { question_id:'Q_025', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'녹이 슬지 않나요?', answer_text:'SUS304 스테인리스 스틸로 녹 걱정 없습니다. 일반 욕실 환경에서 반영구적으로 사용 가능합니다.', author_name:'구*훈', created_at:'2026-02-25T16:00:00Z', status:'answered', click_count:312, related_count:23 },
+      { question_id:'Q_026', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'무광 블랙 도장이 벗겨지지 않나요?', answer_text:'무광 블랙은 파우더코팅 처리로 일반 사용에서 벗겨지지 않습니다.', author_name:'양*서', created_at:'2026-02-24T10:00:00Z', status:'answered', click_count:198, related_count:11 },
+      // 전기/에너지 > 전기세/소비전력
+      { question_id:'Q_027', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'전기세가 많이 나오나요?', answer_text:'120W 저전력으로, 하루 4시간 사용 시 월 전기세 약 1,500원 정도입니다.', author_name:'노*율', created_at:'2026-02-28T09:00:00Z', status:'answered', click_count:612, related_count:48 },
+      { question_id:'Q_028', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'120W면 뭐랑 비슷한 수준인가요?', answer_text:'노트북(60~90W)보다 약간 높고, 헤어드라이기(1200W)의 1/10 수준입니다.', author_name:'전*경', created_at:'2026-02-27T13:00:00Z', status:'answered', click_count:345, related_count:24 },
+      { question_id:'Q_029', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'하루 종일 켜놓으면 전기세 얼마나 나와요?', answer_text:'24시간 연속 사용 시 하루 약 350원, 월 약 10,500원 정도입니다.', author_name:'황*담', created_at:'2026-02-26T15:00:00Z', status:'answered', click_count:287, related_count:18 },
+      // 전기/에너지 > 전원/콘센트
+      { question_id:'Q_030', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'욕실에 콘센트가 없으면 어떡하나요?', answer_text:'전기 기사를 통해 욕실 내 방수 콘센트를 설치하시거나, 문 틈 연장 케이블(별매)을 사용하실 수 있습니다.', author_name:'차*윤', created_at:'2026-02-27T10:30:00Z', status:'answered', click_count:378, related_count:27 },
+      { question_id:'Q_031', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'전원 코드 길이가 얼마나 되나요?', answer_text:'전원 코드는 약 1.5m입니다.', author_name:'곽*영', created_at:'2026-02-26T08:00:00Z', status:'answered', click_count:198, related_count:13 },
+      { question_id:'Q_032', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'연장선/멀티탭에 꽂아도 되나요?', answer_text:'가능하지만, 방수 등급이 있는 멀티탭 사용을 권장합니다. 벽면 콘센트 직접 연결이 가장 안전합니다.', author_name:'하*름', created_at:'2026-02-25T12:00:00Z', status:'answered', click_count:234, related_count:15 },
+      // 배송/교환 > 배송/설치 서비스
+      { question_id:'Q_033', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'무료 배송인가요?', answer_text:'전국 무료 배송입니다. 제주/도서산간 지역은 추가 배송비 3,000원이 발생합니다.', author_name:'민*기', created_at:'2026-02-27T14:00:00Z', status:'answered', click_count:312, related_count:22 },
+      { question_id:'Q_034', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'설치 기사가 와서 달아주나요?', answer_text:'기본 배송은 택배 배송이며, 유료 설치 서비스(별도 30,000원)를 신청하실 수 있습니다.', author_name:'권*나', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:245, related_count:16 },
+      { question_id:'Q_035', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'주문 후 며칠 만에 받을 수 있나요?', answer_text:'결제 완료 후 1~2영업일 내 출고, 출고 후 1~2일 내 수령 가능합니다.', author_name:'표*진', created_at:'2026-02-25T09:30:00Z', status:'answered', click_count:198, related_count:12 },
+      // 배송/교환 > 교환/반품
+      { question_id:'Q_036', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'설치 후에도 반품 가능한가요?', answer_text:'설치 후에는 반품이 어렵습니다. 설치 전 충분히 확인해주세요. 미개봉 시 7일 이내 반품 가능합니다.', author_name:'남*아', created_at:'2026-02-26T16:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_037', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'불량이면 무상 교환 되나요?', answer_text:'수령 후 7일 이내 제품 불량 확인 시 무상 교환/환불 처리됩니다.', author_name:'도*현', created_at:'2026-02-25T13:00:00Z', status:'answered', click_count:198, related_count:12 },
+      { question_id:'Q_038', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'색상 교환 가능한가요?', answer_text:'미개봉/미설치 상태에서 7일 이내 색상 교환 가능합니다. 왕복 배송비 6,000원이 발생합니다.', author_name:'심*율', created_at:'2026-02-24T14:30:00Z', status:'answered', click_count:145, related_count:8 },
+      // 관리/AS > 청소/관리법
+      { question_id:'Q_039', product_id:'PROD_001', category_id:'CAT_6_1', question_text:'청소는 어떻게 하나요?', answer_text:'부드러운 천에 중성세제를 묻혀 닦아주세요. 연마제나 철수세미는 사용하지 마세요.', author_name:'성*빈', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_040', product_id:'PROD_001', category_id:'CAT_6_1', question_text:'물때가 끼면 어떻게 제거하나요?', answer_text:'식초를 희석한 물(1:3)로 닦아주시면 깔끔하게 제거됩니다.', author_name:'원*서', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:178, related_count:10 },
+      // 관리/AS > 내구성/보증/AS
+      { question_id:'Q_041', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'보증기간이 얼마나 되나요?', answer_text:'제품 보증기간은 구매일로부터 2년입니다.', author_name:'김*수', created_at:'2026-02-27T11:30:00Z', status:'answered', click_count:298, related_count:20 },
+      { question_id:'Q_042', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'몇 년 정도 사용할 수 있나요?', answer_text:'정상 사용 시 10년 이상 사용 가능합니다. 발열체 수명은 약 30,000시간입니다.', author_name:'이*진', created_at:'2026-02-26T10:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_043', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'고장나면 AS는 어디서 받나요?', answer_text:'고객센터(1588-XXXX) 또는 카카오톡 채널로 접수하시면 방문/택배 AS 진행됩니다.', author_name:'박*현', created_at:'2026-02-25T15:30:00Z', status:'answered', click_count:187, related_count:11 },
+      // 가격/혜택 > 할인/쿠폰
+      { question_id:'Q_044', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'할인 행사 있나요?', answer_text:'현재 정가 129,000원에서 31% 할인된 89,000원에 판매 중입니다.', author_name:'최*아', created_at:'2026-02-28T10:00:00Z', status:'answered', click_count:345, related_count:25 },
+      { question_id:'Q_045', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'신규 회원 할인 있나요?', answer_text:'회원가입 시 5,000원 할인 쿠폰이 자동 발급됩니다.', author_name:'정*호', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_046', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'2개 사면 추가 할인 있나요?', answer_text:'2개 이상 구매 시 개당 5,000원 추가 할인됩니다.', author_name:'강*미', created_at:'2026-02-26T13:30:00Z', status:'answered', click_count:198, related_count:12 },
+      // 가격/혜택 > 결제/적립
+      { question_id:'Q_047', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'무이자 할부 되나요?', answer_text:'삼성/신한/현대카드 3개월 무이자 할부 가능합니다.', author_name:'조*원', created_at:'2026-02-27T14:30:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_048', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'카카오페이로 결제 가능한가요?', answer_text:'카카오페이, 네이버페이, 토스 모두 이용 가능합니다.', author_name:'한*정', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:178, related_count:10 },
+      { question_id:'Q_049', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'리뷰 적립금이 있나요?', answer_text:'텍스트 리뷰 500원, 포토 리뷰 1,000원이 적립됩니다.', author_name:'윤*석', created_at:'2026-02-25T11:30:00Z', status:'answered', click_count:145, related_count:7 }
+    ];
+
+    // QnA 뱃지 동적 업데이트
+    (function() {
+      var badge = document.getElementById('qna-badge');
+      if (badge) {
+        var cnt = MOCK_QUESTIONS.length;
+        badge.textContent = cnt >= 1000 ? (cnt / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : String(cnt);
+      }
+    })();
+
+    /* 데모 모드 API 인터셉트 */
+    (function() {
+      var originalFetch = window.fetch;
+
+      window.fetch = function(url, options) {
+        var urlStr = typeof url === 'string' ? url : url.toString();
+        var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        if (!isLocal) return originalFetch.apply(this, arguments);
+
+        if (options && options.method === 'POST') {
+          var body = JSON.parse(options.body);
+          return handleDemoPost(body);
+        }
+
+        var params = {};
+        try {
+          var urlObj = new URL(urlStr);
+          urlObj.searchParams.forEach(function(val, key) { params[key] = val; });
+        } catch(e) {
+          var queryStr = urlStr.split('?')[1] || '';
+          queryStr.split('&').forEach(function(pair) {
+            var parts = pair.split('=');
+            if (parts[0]) params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+          });
+        }
+        return handleDemoGet(params);
+      };
+
+      function respond(data) {
+        return Promise.resolve(new Response(JSON.stringify(data), {
+          status: 200, headers: { 'Content-Type': 'application/json' }
+        }));
+      }
+
+      function handleDemoGet(params) {
+        switch(params.action) {
+          case 'getSummary': return respond(buildSummary());
+          case 'getCategories': return respond(buildCategories());
+          case 'getQuestions': return respond(buildQuestions(params));
+          case 'getQuestionDetail': return respond(buildQuestionDetail(params));
+          case 'getTypeStats': return respond(buildTypeStats());
+          default: return respond({ error: 'Unknown action' });
+        }
+      }
+
+      function handleDemoPost(body) {
+        switch(body.action) {
+          case 'submitQuestion':
+            MOCK_QUESTIONS.unshift({
+              question_id: 'Q_NEW_' + Date.now(), product_id: body.product_id,
+              category_id: body.category_id || '', question_text: body.question_text,
+              answer_text: '', author_name: body.author_name || '익명',
+              created_at: new Date().toISOString(), status: 'pending',
+              click_count: 0
+            });
+            // 하단 QnA 배지 업데이트
+            var badge = document.querySelector('[data-target="panel-qna"] .nav-badge');
+            if (badge) badge.textContent = MOCK_QUESTIONS.length;
+            return respond({ success: true, message: '질문이 등록되었습니다' });
+          case 'trackClick':
+            var q = MOCK_QUESTIONS.find(function(q) { return q.question_id === body.question_id; });
+            if (q) q.click_count++;
+            return respond({ success: true });
+          default:
+            return respond({ success: true });
+        }
+      }
+
+      function buildSummary() {
+        var totalClicks = 0;
+        MOCK_QUESTIONS.forEach(function(q) {
+          totalClicks += q.click_count;
+        });
+        var categoryStats = {};
+        MOCK_CATEGORIES.forEach(function(c) {
+          categoryStats[c.category_id] = { category_id: c.category_id, name: c.name, level: c.level, question_count: 0, click_count: 0 };
+        });
+        MOCK_QUESTIONS.forEach(function(q) {
+          if (categoryStats[q.category_id]) {
+            categoryStats[q.category_id].question_count++;
+            categoryStats[q.category_id].click_count += q.click_count;
+          }
+        });
+        return {
+          success: true,
+          summary: {
+            total_questions: MOCK_QUESTIONS.length, total_clicks: totalClicks,
+            category_stats: Object.values(categoryStats),
+            top_questions: MOCK_QUESTIONS.slice().sort(function(a,b) { return b.click_count - a.click_count; }).slice(0, 5)
+          }
+        };
+      }
+
+      function buildCategories() {
+        var tree = [], map = {};
+        MOCK_CATEGORIES.forEach(function(c) { c.children = []; map[c.category_id] = c; });
+        MOCK_CATEGORIES.forEach(function(c) {
+          if (c.parent_id && map[c.parent_id]) map[c.parent_id].children.push(c);
+          else if (!c.parent_id) tree.push(c);
+        });
+        return { success: true, categories: tree, flat: MOCK_CATEGORIES };
+      }
+
+      function buildQuestions(params) {
+        var filtered = MOCK_QUESTIONS.filter(function(q) { return q.product_id === params.product_id; });
+        if (params.category_id) {
+          var catId = params.category_id;
+          var childIds = [catId];
+          MOCK_CATEGORIES.forEach(function(c) { if (c.parent_id === catId) childIds.push(c.category_id); });
+          filtered = filtered.filter(function(q) { return childIds.indexOf(q.category_id) !== -1; });
+        }
+        var sortBy = params.sort || 'click_count';
+        var order = params.order || 'desc';
+        filtered.sort(function(a, b) {
+          var va = sortBy === 'created_at' ? new Date(a[sortBy]).getTime() : (Number(a[sortBy]) || 0);
+          var vb = sortBy === 'created_at' ? new Date(b[sortBy]).getTime() : (Number(b[sortBy]) || 0);
+          return order === 'asc' ? va - vb : vb - va;
+        });
+        var catMap = {};
+        MOCK_CATEGORIES.forEach(function(c) { catMap[c.category_id] = c; });
+        filtered = filtered.map(function(q) {
+          var path = [], cur = catMap[q.category_id];
+          while (cur) { path.unshift(cur.name); cur = cur.parent_id ? catMap[cur.parent_id] : null; }
+          q.category_path = path.join(' > ');
+          q.category_name = catMap[q.category_id] ? catMap[q.category_id].name : '';
+          return q;
+        });
+        var page = parseInt(params.page) || 1, perPage = parseInt(params.per_page) || 10;
+        var start = (page - 1) * perPage;
+        return {
+          success: true,
+          questions: filtered.slice(start, start + perPage),
+          pagination: { page: page, per_page: perPage, total_count: filtered.length, total_pages: Math.ceil(filtered.length / perPage) }
+        };
+      }
+
+      function buildQuestionDetail(params) {
+        var q = MOCK_QUESTIONS.find(function(q) { return q.question_id === params.question_id; });
+        if (!q) return { error: '질문을 찾을 수 없습니다' };
+        q.click_count++;
+        return { success: true, question: q };
+      }
+
+      function buildTypeStats() {
+        var level1Cats = MOCK_CATEGORIES.filter(function(c) { return Number(c.level) === 1; });
+        var level2Cats = MOCK_CATEGORIES.filter(function(c) { return Number(c.level) === 2; });
+        var catMap = {};
+        MOCK_CATEGORIES.forEach(function(c) { catMap[c.category_id] = c; });
+
+        function getLevel1Parent(catId) {
+          var cur = catMap[catId];
+          while (cur) {
+            if (Number(cur.level) === 1) return cur.category_id;
+            cur = cur.parent_id ? catMap[cur.parent_id] : null;
+          }
+          return catId;
+        }
+
+        function getLevel2Parent(catId) {
+          var cur = catMap[catId];
+          if (!cur) return null;
+          if (Number(cur.level) === 2) return cur.category_id;
+          while (cur && Number(cur.level) > 2) {
+            cur = cur.parent_id ? catMap[cur.parent_id] : null;
+          }
+          return cur && Number(cur.level) === 2 ? cur.category_id : null;
+        }
+
+        var clickersPerType = {};
+        var clickersPerSubType = {};
+        var clickersPerQuestion = {};
+        var questionersPerType = {};
+        var allClickers = {};
+
+        // 질문자 집계
+        MOCK_QUESTIONS.forEach(function(q) {
+          var l1 = getLevel1Parent(q.category_id);
+          if (!questionersPerType[l1]) questionersPerType[l1] = {};
+          questionersPerType[l1][q.author_name || 'anon'] = true;
+        });
+
+        // 클릭자 시뮬레이션: 500명 회원이 각 3~8개 질문 클릭
+        for (var m = 1; m <= 500; m++) {
+          var memberId = 'MEM_' + m;
+          var clickCount = Math.floor(Math.random() * 6) + 3;
+          var shuffled = MOCK_QUESTIONS.slice().sort(function() { return 0.5 - Math.random(); });
+          var picked = shuffled.slice(0, Math.min(clickCount, shuffled.length));
+          picked.forEach(function(q) {
+            var l1 = getLevel1Parent(q.category_id);
+            var l2 = getLevel2Parent(q.category_id);
+
+            // level-1 유형별
+            if (!clickersPerType[l1]) clickersPerType[l1] = {};
+            clickersPerType[l1][memberId] = true;
+            allClickers[memberId] = true;
+
+            // level-2 세부유형별
+            if (l2) {
+              if (!clickersPerSubType[l2]) clickersPerSubType[l2] = {};
+              clickersPerSubType[l2][memberId] = true;
+            }
+
+            // 개별 질문별
+            if (!clickersPerQuestion[q.question_id]) clickersPerQuestion[q.question_id] = {};
+            clickersPerQuestion[q.question_id][memberId] = true;
+          });
+        }
+
+        var typeStats = {};
+        level1Cats.forEach(function(cat) {
+          typeStats[cat.category_id] = {
+            unique_clickers: clickersPerType[cat.category_id] ? Object.keys(clickersPerType[cat.category_id]).length : 0,
+            unique_questioners: questionersPerType[cat.category_id] ? Object.keys(questionersPerType[cat.category_id]).length : 0
+          };
+        });
+
+        var subTypeStats = {};
+        level2Cats.forEach(function(cat) {
+          subTypeStats[cat.category_id] = {
+            unique_clickers: clickersPerSubType[cat.category_id] ? Object.keys(clickersPerSubType[cat.category_id]).length : 0
+          };
+        });
+
+        var questionClickerCounts = {};
+        MOCK_QUESTIONS.forEach(function(q) {
+          questionClickerCounts[q.question_id] = clickersPerQuestion[q.question_id]
+            ? Object.keys(clickersPerQuestion[q.question_id]).length : 0;
+        });
+
+        return {
+          success: true,
+          total_unique_clickers: Object.keys(allClickers).length,
+          type_stats: typeStats,
+          sub_type_stats: subTypeStats,
+          question_clickers: questionClickerCounts
+        };
+      }
+
+    })();
+  </script>
+
+  <!-- QnA 위젯 -->
+  <script src="qna-widget.js"></script>
+</body>
+</html>
