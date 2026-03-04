@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 3px;
 }
 
 .qna-section-header-row .qna-section-subtitle,
@@ -423,7 +423,7 @@
 
 .qna-faq-desc {
   font-size: 12px;
-  color: #000000;
+  color: #686868;
   line-height: 1.5;
   margin-bottom: 10px;
 }
