@@ -331,7 +331,6 @@
   height: 2px;
   background: var(--qna-primary);
   border-radius: 1px;
-  box-shadow: 0 5px 8px rgba(37, 99, 235, 0.35);
 }
 
 /* ============================================
@@ -426,7 +425,6 @@
   height: 2px;
   background: var(--qna-primary);
   border-radius: 1px;
-  box-shadow: 0 5px 8px rgba(37, 99, 235, 0.35);
 }
 
 /* ============================================
