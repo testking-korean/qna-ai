@@ -36,7 +36,7 @@ function initializeSheets() {
     'Products': ['product_id', 'product_name', 'seller_id', 'created_at'],
     'Categories': ['category_id', 'parent_id', 'level', 'name', 'product_id', 'sort_order'],
     'Questions': [
-      '질문ID', '제품ID', '질문유형', '세부유형', '대표질문그룹', '질문내용', '답변내용',
+      '질문ID', '제품ID', '질문유형', '질문세부유형', '대표질문그룹', '질문내용', '답변내용',
       '작성자', '작성일', '상태', '클릭수', '관련질문수'
     ],
     'ClickLog': ['log_id', 'question_id', 'session_id', 'member_id', 'clicked_at'],
@@ -102,9 +102,9 @@ function fillGuideSheet() {
     [''],
     ['3. Questions (질문 데이터) ★ 핵심 시트'],
     ['   - 모든 질문과 답변, 클릭수가 저장됨'],
-    ['   - 컬럼: 질문ID | 제품ID | 질문유형 | 세부유형 | 대표질문그룹 | 질문내용 | 답변내용 | 작성자 | 작성일 | 상태 | 클릭수 | 관련질문수'],
+    ['   - 컬럼: 질문ID | 제품ID | 질문유형 | 질문세부유형 | 대표질문그룹 | 질문내용 | 답변내용 | 작성자 | 작성일 | 상태 | 클릭수 | 관련질문수'],
     ['   - 질문유형: 대분류 (예: 배송/교환, 사이즈)'],
-    ['   - 세부유형: 중분류 (예: 교환절차, 사이즈표)'],
+    ['   - 질문세부유형: 중분류 (예: 교환절차, 사이즈표)'],
     ['   - 대표질문그룹: AI가 유사 질문을 그룹화한 대표 질문'],
     ['   - 상태 값: pending(답변대기) / answered(답변완료) / hidden(숨김)'],
     ['   - 클릭수는 위젯이 자동으로 업데이트함'],

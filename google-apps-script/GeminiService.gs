@@ -120,7 +120,7 @@ function handleSearchQuestions(params) {
           question_text: q['질문내용'],
           answer_text: q['답변내용'],
           type: q['질문유형'],
-          sub_type: q['세부유형'],
+          sub_type: q['질문세부유형'],
           status: q['상태'],
           score: m.score,
           related_count: q['관련질문수'] || 1

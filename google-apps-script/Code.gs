@@ -98,7 +98,7 @@ function jsonResponse(data) {
  * 유형 목록 조회 (Questions 시트에서 직접 추출)
  * GET ?action=getCategories&product_id=xxx
  *
- * 기존 Categories 시트 대신 Questions의 질문유형/세부유형 컬럼에서 동적 생성
+ * 기존 Categories 시트 대신 Questions의 질문유형/질문세부유형 컬럼에서 동적 생성
  */
 function handleGetCategories(params) {
   var productId = params.product_id;
@@ -106,12 +106,12 @@ function handleGetCategories(params) {
 
   var questions = findRowsByColumn('Questions', '제품ID', productId);
 
-  // 질문유형 → 세부유형 맵 구축
+  // 질문유형 → 질문세부유형 맵 구축
   var typeMap = {};       // { '배송/교환': { subTypes: { '교환절차': true, ... }, sort: 1 } }
   var typeOrder = [];
   questions.forEach(function(q) {
     var typeName = q['질문유형'] || '';
-    var subTypeName = q['세부유형'] || '';
+    var subTypeName = q['질문세부유형'] || '';
     if (!typeName) return;
     if (!typeMap[typeName]) {
       typeMap[typeName] = { subTypes: {}, sort: typeOrder.length + 1 };
@@ -161,7 +161,7 @@ function handleGetCategories(params) {
 
 /**
  * 질문 목록 조회 (정렬/필터/페이징)
- * GET ?action=getQuestions&product_id=xxx&type=질문유형&sub_type=세부유형&sort=클릭수&order=desc&page=1
+ * GET ?action=getQuestions&product_id=xxx&type=질문유형&sub_type=질문세부유형&sort=클릭수&order=desc&page=1
  */
 function handleGetQuestions(params) {
   var productId = params.product_id;
@@ -178,7 +178,7 @@ function handleGetQuestions(params) {
   var questions = findRows('Questions', function(row) {
     var matchProduct = String(row['제품ID']) === String(productId);
     var matchType = !typeName || String(row['질문유형']) === String(typeName);
-    var matchSubType = !subTypeName || String(row['세부유형']) === String(subTypeName);
+    var matchSubType = !subTypeName || String(row['질문세부유형']) === String(subTypeName);
     var matchStatus = row['상태'] !== 'hidden';
     return matchProduct && matchType && matchSubType && matchStatus;
   });
@@ -227,7 +227,7 @@ function mapQuestionToApi(q) {
     question_id: q['질문ID'],
     product_id: q['제품ID'],
     type_name: q['질문유형'],
-    sub_type_name: q['세부유형'],
+    sub_type_name: q['질문세부유형'],
     group_name: q['대표질문그룹'],
     question_text: q['질문내용'],
     answer_text: q['답변내용'],
@@ -332,7 +332,7 @@ function handleSubmitQuestion(body) {
   var questionId = addRow('Questions', {
     '제품ID': body.product_id,
     '질문유형': body.type || '',
-    '세부유형': body.sub_type || '',
+    '질문세부유형': body.sub_type || '',
     '대표질문그룹': '',
     '질문내용': body.question_text,
     '답변내용': '',
@@ -412,7 +412,7 @@ function handleAnswerQuestion(body) {
  * 질문유형별 고유 클릭자/질문자 수 반환
  * GET ?action=getTypeStats&product_id=xxx
  *
- * Questions 시트의 질문유형/세부유형 컬럼을 직접 사용 (Categories 시트 불필요)
+ * Questions 시트의 질문유형/질문세부유형 컬럼을 직접 사용 (Categories 시트 불필요)
  */
 function handleGetTypeStats(params) {
   var productId = params.product_id;
@@ -420,15 +420,15 @@ function handleGetTypeStats(params) {
 
   var questions = findRowsByColumn('Questions', '제품ID', productId);
 
-  // question_id → 질문유형/세부유형 매핑
+  // question_id → 질문유형/질문세부유형 매핑
   var questionToType = {};
   var questionToSubType = {};
   questions.forEach(function(q) {
     questionToType[q['질문ID']] = q['질문유형'] || '';
-    questionToSubType[q['질문ID']] = q['세부유형'] || '';
+    questionToSubType[q['질문ID']] = q['질문세부유형'] || '';
   });
 
-  // ClickLog에서 고유 member_id 집계 (유형/세부유형/질문별)
+  // ClickLog에서 고유 member_id 집계 (유형/질문세부유형/질문별)
   var clickLogs = getAllRows('ClickLog');
   var clickersPerType = {};
   var clickersPerSubType = {};
@@ -447,7 +447,7 @@ function handleGetTypeStats(params) {
     clickersPerType[typeName][memberId] = true;
     allClickers[memberId] = true;
 
-    // 세부유형별
+    // 질문세부유형별
     var subTypeName = questionToSubType[log.question_id];
     if (subTypeName) {
       if (!clickersPerSubType[subTypeName]) clickersPerSubType[subTypeName] = {};
@@ -473,7 +473,7 @@ function handleGetTypeStats(params) {
   var subTypeNames = {};
   questions.forEach(function(q) {
     if (q['질문유형']) typeNames[q['질문유형']] = true;
-    if (q['세부유형']) subTypeNames[q['세부유형']] = true;
+    if (q['질문세부유형']) subTypeNames[q['질문세부유형']] = true;
   });
 
   var typeStats = {};
