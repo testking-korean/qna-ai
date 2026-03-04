@@ -32,9 +32,9 @@ function seedClickLog() {
   }
 
   var headers = qData[0];
-  var qIdIndex = headers.indexOf('question_id');
+  var qIdIndex = headers.indexOf('질문ID');
   if (qIdIndex === -1) {
-    Logger.log('question_id 컬럼을 찾을 수 없습니다.');
+    Logger.log('질문ID 컬럼을 찾을 수 없습니다.');
     return;
   }
 

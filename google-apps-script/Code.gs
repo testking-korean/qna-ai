@@ -95,96 +95,100 @@ function jsonResponse(data) {
 // ============================================
 
 /**
- * 카테고리 트리 조회
+ * 유형 목록 조회 (Questions 시트에서 직접 추출)
  * GET ?action=getCategories&product_id=xxx
+ *
+ * 기존 Categories 시트 대신 Questions의 질문유형/세부유형 컬럼에서 동적 생성
  */
 function handleGetCategories(params) {
   var productId = params.product_id;
   if (!productId) return { error: 'product_id 필수' };
 
-  var categories = findRowsByColumn('Categories', 'product_id', productId);
+  var questions = findRowsByColumn('Questions', '제품ID', productId);
 
-  // 트리 구조로 변환
-  var tree = buildCategoryTree(categories);
-  return { success: true, categories: tree, flat: categories };
-}
-
-/**
- * 카테고리를 트리 구조로 변환
- */
-function buildCategoryTree(categories) {
-  var map = {};
-  var roots = [];
-
-  // 먼저 모든 카테고리를 맵에 등록
-  categories.forEach(function(cat) {
-    cat.children = [];
-    map[cat.category_id] = cat;
-  });
-
-  // 부모-자식 관계 설정
-  categories.forEach(function(cat) {
-    if (cat.parent_id && map[cat.parent_id]) {
-      map[cat.parent_id].children.push(cat);
-    } else {
-      roots.push(cat);
+  // 질문유형 → 세부유형 맵 구축
+  var typeMap = {};       // { '배송/교환': { subTypes: { '교환절차': true, ... }, sort: 1 } }
+  var typeOrder = [];
+  questions.forEach(function(q) {
+    var typeName = q['질문유형'] || '';
+    var subTypeName = q['세부유형'] || '';
+    if (!typeName) return;
+    if (!typeMap[typeName]) {
+      typeMap[typeName] = { subTypes: {}, sort: typeOrder.length + 1 };
+      typeOrder.push(typeName);
+    }
+    if (subTypeName) {
+      typeMap[typeName].subTypes[subTypeName] = true;
     }
   });
 
-  // sort_order로 정렬
-  var sortByOrder = function(a, b) {
-    return (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0);
-  };
-  roots.sort(sortByOrder);
-  for (var id in map) {
-    map[id].children.sort(sortByOrder);
-  }
+  // flat 배열 + 트리 구성
+  var flat = [];
+  var tree = [];
+  typeOrder.forEach(function(typeName, idx) {
+    var typeId = 'TYPE_' + (idx + 1);
+    var typeObj = {
+      category_id: typeId,
+      parent_id: '',
+      level: 1,
+      name: typeName,
+      product_id: productId,
+      sort_order: idx + 1,
+      children: []
+    };
+    flat.push({
+      category_id: typeId, parent_id: '', level: 1,
+      name: typeName, product_id: productId, sort_order: idx + 1
+    });
 
-  return roots;
+    var subNames = Object.keys(typeMap[typeName].subTypes);
+    subNames.sort();
+    subNames.forEach(function(subName, sIdx) {
+      var subId = typeId + '_' + (sIdx + 1);
+      var subObj = {
+        category_id: subId, parent_id: typeId, level: 2,
+        name: subName, product_id: productId, sort_order: sIdx + 1
+      };
+      typeObj.children.push(subObj);
+      flat.push(subObj);
+    });
+
+    tree.push(typeObj);
+  });
+
+  return { success: true, categories: tree, flat: flat };
 }
 
 /**
  * 질문 목록 조회 (정렬/필터/페이징)
- * GET ?action=getQuestions&product_id=xxx&category_id=yyy&sort=click_count&order=desc&page=1
+ * GET ?action=getQuestions&product_id=xxx&type=질문유형&sub_type=세부유형&sort=클릭수&order=desc&page=1
  */
 function handleGetQuestions(params) {
   var productId = params.product_id;
   if (!productId) return { error: 'product_id 필수' };
 
-  var categoryId = params.category_id || null;
-  var sortBy = params.sort || 'created_at';
+  var typeName = params.type || null;
+  var subTypeName = params.sub_type || null;
+  var sortBy = params.sort || '작성일';
   var order = params.order || 'desc';
   var page = parseInt(params.page) || 1;
   var perPage = parseInt(params.per_page) || parseInt(getSetting('items_per_page')) || 10;
 
   // 해당 제품의 질문 가져오기
   var questions = findRows('Questions', function(row) {
-    var matchProduct = String(row.product_id) === String(productId);
-    var matchCategory = !categoryId || String(row.category_id) === String(categoryId);
-    var matchStatus = row.status !== 'hidden';
-    return matchProduct && matchCategory && matchStatus;
+    var matchProduct = String(row['제품ID']) === String(productId);
+    var matchType = !typeName || String(row['질문유형']) === String(typeName);
+    var matchSubType = !subTypeName || String(row['세부유형']) === String(subTypeName);
+    var matchStatus = row['상태'] !== 'hidden';
+    return matchProduct && matchType && matchSubType && matchStatus;
   });
-
-  // 하위 카테고리 질문도 포함
-  if (categoryId) {
-    var allCategories = findRowsByColumn('Categories', 'product_id', productId);
-    var childIds = getDescendantCategoryIds(categoryId, allCategories);
-    childIds.push(categoryId);
-
-    questions = findRows('Questions', function(row) {
-      var matchProduct = String(row.product_id) === String(productId);
-      var matchCategory = childIds.indexOf(String(row.category_id)) !== -1;
-      var matchStatus = row.status !== 'hidden';
-      return matchProduct && matchCategory && matchStatus;
-    });
-  }
 
   // 정렬
   questions.sort(function(a, b) {
     var valA, valB;
-    if (sortBy === 'created_at') {
-      valA = new Date(a.created_at).getTime();
-      valB = new Date(b.created_at).getTime();
+    if (sortBy === '작성일') {
+      valA = new Date(a['작성일']).getTime();
+      valB = new Date(b['작성일']).getTime();
     } else {
       valA = Number(a[sortBy]) || 0;
       valB = Number(b[sortBy]) || 0;
@@ -198,15 +202,9 @@ function handleGetQuestions(params) {
   var startIndex = (page - 1) * perPage;
   var pagedQuestions = questions.slice(startIndex, startIndex + perPage);
 
-  // 카테고리 이름 매핑
-  var allCats = findRowsByColumn('Categories', 'product_id', productId);
-  var catMap = {};
-  allCats.forEach(function(c) { catMap[c.category_id] = c; });
-
+  // 위젯 호환 키 매핑
   pagedQuestions = pagedQuestions.map(function(q) {
-    q.category_name = catMap[q.category_id] ? catMap[q.category_id].name : '';
-    q.category_path = getCategoryPath(q.category_id, catMap);
-    return q;
+    return mapQuestionToApi(q);
   });
 
   return {
@@ -222,32 +220,25 @@ function handleGetQuestions(params) {
 }
 
 /**
- * 카테고리 경로 문자열 생성 (예: "배송/교환 > 교환절차")
+ * Questions 시트의 한글 컬럼을 위젯 API 호환 키로 매핑
  */
-function getCategoryPath(categoryId, catMap) {
-  var path = [];
-  var current = catMap[categoryId];
-  while (current) {
-    path.unshift(current.name);
-    current = current.parent_id ? catMap[current.parent_id] : null;
-  }
-  return path.join(' > ');
+function mapQuestionToApi(q) {
+  return {
+    question_id: q['질문ID'],
+    product_id: q['제품ID'],
+    type_name: q['질문유형'],
+    sub_type_name: q['세부유형'],
+    group_name: q['대표질문그룹'],
+    question_text: q['질문내용'],
+    answer_text: q['답변내용'],
+    author_name: q['작성자'],
+    created_at: q['작성일'],
+    status: q['상태'],
+    click_count: Number(q['클릭수']) || 0,
+    related_count: Number(q['관련질문수']) || 0
+  };
 }
 
-/**
- * 특정 카테고리의 모든 하위 카테고리 ID 수집
- */
-function getDescendantCategoryIds(parentId, allCategories) {
-  var children = allCategories.filter(function(c) {
-    return String(c.parent_id) === String(parentId);
-  });
-  var ids = [];
-  children.forEach(function(child) {
-    ids.push(String(child.category_id));
-    ids = ids.concat(getDescendantCategoryIds(child.category_id, allCategories));
-  });
-  return ids;
-}
 
 /**
  * 질문 상세 조회 + 클릭 카운트 증가
@@ -257,14 +248,14 @@ function handleGetQuestionDetail(params) {
   var questionId = params.question_id;
   if (!questionId) return { error: 'question_id 필수' };
 
-  var questions = findRowsByColumn('Questions', 'question_id', questionId);
+  var questions = findRowsByColumn('Questions', '질문ID', questionId);
   if (questions.length === 0) return { error: '질문을 찾을 수 없습니다' };
 
   var question = questions[0];
 
   // 클릭 카운트 증가
-  incrementCell('Questions', 'question_id', questionId, 'click_count', 1);
-  question.click_count = (Number(question.click_count) || 0) + 1;
+  incrementCell('Questions', '질문ID', questionId, '클릭수', 1);
+  question['클릭수'] = (Number(question['클릭수']) || 0) + 1;
 
   // 클릭 로그 기록
   if (params.session_id) {
@@ -275,7 +266,7 @@ function handleGetQuestionDetail(params) {
     }, 'log_id');
   }
 
-  return { success: true, question: question };
+  return { success: true, question: mapQuestionToApi(question) };
 }
 
 /**
@@ -286,41 +277,31 @@ function handleGetSummary(params) {
   var productId = params.product_id;
   if (!productId) return { error: 'product_id 필수' };
 
-  var questions = findRowsByColumn('Questions', 'product_id', productId);
-  var categories = findRowsByColumn('Categories', 'product_id', productId);
+  var questions = findRowsByColumn('Questions', '제품ID', productId);
 
   // 전체 통계
   var totalQuestions = questions.length;
   var totalClicks = 0;
 
   questions.forEach(function(q) {
-    totalClicks += Number(q.click_count) || 0;
+    totalClicks += Number(q['클릭수']) || 0;
   });
 
-  // 카테고리별 통계
-  var categoryStats = {};
-  categories.forEach(function(cat) {
-    categoryStats[cat.category_id] = {
-      category_id: cat.category_id,
-      name: cat.name,
-      level: cat.level,
-      question_count: 0,
-      click_count: 0
-    };
-  });
-
+  // 질문유형별 통계
+  var typeStats = {};
   questions.forEach(function(q) {
-    var catId = q.category_id;
-    if (categoryStats[catId]) {
-      categoryStats[catId].question_count++;
-      categoryStats[catId].click_count += Number(q.click_count) || 0;
+    var typeName = q['질문유형'] || '미분류';
+    if (!typeStats[typeName]) {
+      typeStats[typeName] = { name: typeName, question_count: 0, click_count: 0 };
     }
+    typeStats[typeName].question_count++;
+    typeStats[typeName].click_count += Number(q['클릭수']) || 0;
   });
 
   // 상위 질문 (클릭수 기준 Top 5)
   var topQuestions = questions
     .sort(function(a, b) {
-      return (Number(b.click_count) || 0) - (Number(a.click_count) || 0);
+      return (Number(b['클릭수']) || 0) - (Number(a['클릭수']) || 0);
     })
     .slice(0, 5);
 
@@ -329,7 +310,7 @@ function handleGetSummary(params) {
     summary: {
       total_questions: totalQuestions,
       total_clicks: totalClicks,
-      category_stats: Object.values(categoryStats),
+      type_stats: Object.values(typeStats),
       top_questions: topQuestions
     }
   };
@@ -349,15 +330,18 @@ function handleSubmitQuestion(body) {
   }
 
   var questionId = addRow('Questions', {
-    product_id: body.product_id,
-    category_id: body.category_id || '',
-    question_text: body.question_text,
-    answer_text: '',
-    author_name: body.author_name || '익명',
-    created_at: new Date().toISOString(),
-    status: 'pending',
-    click_count: 0
-  }, 'question_id');
+    '제품ID': body.product_id,
+    '질문유형': body.type || '',
+    '세부유형': body.sub_type || '',
+    '대표질문그룹': '',
+    '질문내용': body.question_text,
+    '답변내용': '',
+    '작성자': body.author_name || '익명',
+    '작성일': new Date().toISOString(),
+    '상태': 'pending',
+    '클릭수': 0,
+    '관련질문수': 0
+  }, '질문ID');
 
   return { success: true, question_id: questionId, message: '질문이 등록되었습니다' };
 }
@@ -370,7 +354,7 @@ function handleTrackClick(body) {
   var questionId = body.question_id;
   if (!questionId) return { error: 'question_id 필수' };
 
-  incrementCell('Questions', 'question_id', questionId, 'click_count', 1);
+  incrementCell('Questions', '질문ID', questionId, '클릭수', 1);
 
   addRow('ClickLog', {
     question_id: questionId,
@@ -411,9 +395,9 @@ function handleAnswerQuestion(body) {
     return { error: 'question_id와 answer_text는 필수입니다' };
   }
 
-  var updated = updateRow('Questions', 'question_id', body.question_id, {
-    answer_text: body.answer_text,
-    status: 'answered'
+  var updated = updateRow('Questions', '질문ID', body.question_id, {
+    '답변내용': body.answer_text,
+    '상태': 'answered'
   });
 
   if (!updated) return { error: '질문을 찾을 수 없습니다' };
@@ -427,47 +411,21 @@ function handleAnswerQuestion(body) {
 /**
  * 질문유형별 고유 클릭자/질문자 수 반환
  * GET ?action=getTypeStats&product_id=xxx
+ *
+ * Questions 시트의 질문유형/세부유형 컬럼을 직접 사용 (Categories 시트 불필요)
  */
 function handleGetTypeStats(params) {
   var productId = params.product_id;
   if (!productId) return { error: 'product_id 필수' };
 
-  var questions = findRowsByColumn('Questions', 'product_id', productId);
-  var categories = findRowsByColumn('Categories', 'product_id', productId);
+  var questions = findRowsByColumn('Questions', '제품ID', productId);
 
-  // 카테고리 맵
-  var catMap = {};
-  categories.forEach(function(c) { catMap[c.category_id] = c; });
-
-  // category_id → level1 부모 찾기
-  function getLevel1Parent(catId) {
-    var current = catMap[catId];
-    while (current) {
-      if (Number(current.level) === 1) return current.category_id;
-      current = current.parent_id ? catMap[current.parent_id] : null;
-    }
-    return catId;
-  }
-
-  // category_id → level2 부모 찾기
-  function getLevel2Parent(catId) {
-    var current = catMap[catId];
-    if (!current) return null;
-    if (Number(current.level) === 2) return current.category_id;
-    while (current && Number(current.level) > 2) {
-      current = current.parent_id ? catMap[current.parent_id] : null;
-    }
-    return current && Number(current.level) === 2 ? current.category_id : null;
-  }
-
-  // question → level1, level2, category_id 매핑
-  var questionToLevel1 = {};
-  var questionToLevel2 = {};
-  var questionToCat = {};
+  // question_id → 질문유형/세부유형 매핑
+  var questionToType = {};
+  var questionToSubType = {};
   questions.forEach(function(q) {
-    questionToLevel1[q.question_id] = getLevel1Parent(q.category_id);
-    questionToLevel2[q.question_id] = getLevel2Parent(q.category_id);
-    questionToCat[q.question_id] = q.category_id;
+    questionToType[q['질문ID']] = q['질문유형'] || '';
+    questionToSubType[q['질문ID']] = q['세부유형'] || '';
   });
 
   // ClickLog에서 고유 member_id 집계 (유형/세부유형/질문별)
@@ -481,19 +439,19 @@ function handleGetTypeStats(params) {
     var memberId = log.member_id;
     if (!memberId) return;
 
-    var level1Id = questionToLevel1[log.question_id];
-    if (!level1Id) return;
+    var typeName = questionToType[log.question_id];
+    if (!typeName) return;
 
-    // level-1 유형별
-    if (!clickersPerType[level1Id]) clickersPerType[level1Id] = {};
-    clickersPerType[level1Id][memberId] = true;
+    // 질문유형별
+    if (!clickersPerType[typeName]) clickersPerType[typeName] = {};
+    clickersPerType[typeName][memberId] = true;
     allClickers[memberId] = true;
 
-    // level-2 세부유형별
-    var level2Id = questionToLevel2[log.question_id];
-    if (level2Id) {
-      if (!clickersPerSubType[level2Id]) clickersPerSubType[level2Id] = {};
-      clickersPerSubType[level2Id][memberId] = true;
+    // 세부유형별
+    var subTypeName = questionToSubType[log.question_id];
+    if (subTypeName) {
+      if (!clickersPerSubType[subTypeName]) clickersPerSubType[subTypeName] = {};
+      clickersPerSubType[subTypeName][memberId] = true;
     }
 
     // 개별 질문별
@@ -502,39 +460,42 @@ function handleGetTypeStats(params) {
     clickersPerQuestion[qId][memberId] = true;
   });
 
-  // level1별 고유 질문자 수 (author_name 기반)
+  // 질문유형별 고유 질문자 수 (작성자 기반)
   var questionersPerType = {};
   questions.forEach(function(q) {
-    var level1Id = getLevel1Parent(q.category_id);
-    if (!questionersPerType[level1Id]) questionersPerType[level1Id] = {};
-    questionersPerType[level1Id][q.author_name || 'anonymous'] = true;
+    var typeName = q['질문유형'] || '';
+    if (!questionersPerType[typeName]) questionersPerType[typeName] = {};
+    questionersPerType[typeName][q['작성자'] || 'anonymous'] = true;
   });
 
-  var level1Cats = categories.filter(function(c) { return Number(c.level) === 1; });
+  // 고유 질문유형 목록 수집
+  var typeNames = {};
+  var subTypeNames = {};
+  questions.forEach(function(q) {
+    if (q['질문유형']) typeNames[q['질문유형']] = true;
+    if (q['세부유형']) subTypeNames[q['세부유형']] = true;
+  });
+
   var typeStats = {};
-  level1Cats.forEach(function(cat) {
-    var catId = cat.category_id;
-    typeStats[catId] = {
-      unique_clickers: clickersPerType[catId] ? Object.keys(clickersPerType[catId]).length : 0,
-      unique_questioners: questionersPerType[catId] ? Object.keys(questionersPerType[catId]).length : 0
+  Object.keys(typeNames).forEach(function(name) {
+    typeStats[name] = {
+      unique_clickers: clickersPerType[name] ? Object.keys(clickersPerType[name]).length : 0,
+      unique_questioners: questionersPerType[name] ? Object.keys(questionersPerType[name]).length : 0
     };
   });
 
-  // level2별 고유 클릭자 수
-  var level2Cats = categories.filter(function(c) { return Number(c.level) === 2; });
   var subTypeStats = {};
-  level2Cats.forEach(function(cat) {
-    var catId = cat.category_id;
-    subTypeStats[catId] = {
-      unique_clickers: clickersPerSubType[catId] ? Object.keys(clickersPerSubType[catId]).length : 0
+  Object.keys(subTypeNames).forEach(function(name) {
+    subTypeStats[name] = {
+      unique_clickers: clickersPerSubType[name] ? Object.keys(clickersPerSubType[name]).length : 0
     };
   });
 
   // 개별 질문별 고유 클릭자 수
   var questionClickerCounts = {};
   questions.forEach(function(q) {
-    questionClickerCounts[q.question_id] = clickersPerQuestion[q.question_id]
-      ? Object.keys(clickersPerQuestion[q.question_id]).length : 0;
+    questionClickerCounts[q['질문ID']] = clickersPerQuestion[q['질문ID']]
+      ? Object.keys(clickersPerQuestion[q['질문ID']]).length : 0;
   });
 
   return {

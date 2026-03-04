@@ -57,7 +57,7 @@
           this.apiGet('getCategories', { product_id: this.productId }),
           this.apiGet('getQuestions', {
             product_id: this.productId,
-            sort: 'click_count',
+            sort: '클릭수',
             order: 'desc',
             page: 1,
             per_page: 9999
@@ -130,23 +130,19 @@
 
       // level1 카테고리별 집계
       const typeData = level1Cats.map(function (cat) {
-        const childIds = self.getDescendantIds(cat.category_id);
-        childIds.push(cat.category_id);
         const questions = self.allQuestions.filter(function (q) {
-          return childIds.indexOf(q.category_id) !== -1;
+          return q.type_name === cat.name;
         });
         // 2차 하위 카테고리 중 질문이 1개 이상인 것만 카운트
         const subCatCount = self.flatCategories.filter(function (c) {
           if (String(c.parent_id) !== String(cat.category_id) || Number(c.level) !== 2) return false;
-          var subChildIds = self.getDescendantIds(c.category_id);
-          subChildIds.push(c.category_id);
-          return questions.some(function (q) { return subChildIds.indexOf(q.category_id) !== -1; });
+          return questions.some(function (q) { return q.sub_type_name === c.name; });
         }).length;
-        // API에서 가져온 실제 고유 클릭자/질문자 수
-        var stats = self.typeStats[cat.category_id] || {};
+        // API에서 가져온 실제 고유 클릭자/질문자 수 (이름 키)
+        var stats = self.typeStats[cat.name] || {};
         var uniqueClickers = stats.unique_clickers || 0;
         var uniqueQuestioners = stats.unique_questioners || 0;
-        return { cat: cat, count: questions.length, subCatCount: subCatCount, uniqueClickers: uniqueClickers, uniqueQuestioners: uniqueQuestioners, childIds: childIds };
+        return { cat: cat, count: questions.length, subCatCount: subCatCount, uniqueClickers: uniqueClickers, uniqueQuestioners: uniqueQuestioners };
       });
 
       // 정렬
@@ -218,10 +214,8 @@
 
       // 질문 수 기준 정렬 (Screen1과 동일)
       const typeData = level1Cats.map(function (cat) {
-        const childIds = self.getDescendantIds(cat.category_id);
-        childIds.push(cat.category_id);
         const count = self.allQuestions.filter(function (q) {
-          return childIds.indexOf(q.category_id) !== -1;
+          return q.type_name === cat.name;
         }).length;
         return { cat: cat, count: count };
       });
@@ -261,27 +255,24 @@
 
         if (!self.selectedSubTypeId) {
           // ── 카드 모드: 세부 유형을 카드로 표시 ──
-          var allChildIds = self.getDescendantIds(self.selectedTypeId);
-          allChildIds.push(self.selectedTypeId);
+          var selectedTypeName = selectedType.name;
           var typeQuestions = self.allQuestions.filter(function (q) {
-            return allChildIds.indexOf(q.category_id) !== -1;
+            return q.type_name === selectedTypeName;
           });
           // 부모 유형의 고유 질문자 / 고유 클릭자 (분모)
           var parentTypeAuthors = {};
           typeQuestions.forEach(function (q) { if (q.author_name) parentTypeAuthors[q.author_name] = true; });
           var totalTypeAuthors = Math.max(1, Object.keys(parentTypeAuthors).length);
-          var parentTypeClickers = Math.max(1, (self.typeStats[self.selectedTypeId] || {}).unique_clickers || 0);
+          var parentTypeClickers = Math.max(1, (self.typeStats[selectedTypeName] || {}).unique_clickers || 0);
 
           // 세부 유형 데이터 수집
           var subTypeData = level2Cats.map(function (subCat) {
-            const subChildIds = self.getDescendantIds(subCat.category_id);
-            subChildIds.push(subCat.category_id);
             const subQuestions = self.allQuestions.filter(function (q) {
-              return subChildIds.indexOf(q.category_id) !== -1;
+              return q.type_name === selectedTypeName && q.sub_type_name === subCat.name;
             });
             var subAuthorSet = {};
             subQuestions.forEach(function (q) { if (q.author_name) subAuthorSet[q.author_name] = true; });
-            var subUniqueClickers = (self.subTypeStats[subCat.category_id] || {}).unique_clickers || 0;
+            var subUniqueClickers = (self.subTypeStats[subCat.name] || {}).unique_clickers || 0;
             return { cat: subCat, qCount: subQuestions.length, subAuthors: Object.keys(subAuthorSet).length, subUniqueClickers: subUniqueClickers };
           });
 
@@ -336,10 +327,10 @@
       // 대표 질문: 세부 유형이 선택된 경우 nav-bar 안에 표시
       if (self.selectedSubTypeId) {
 
-        const subChildIds = self.getDescendantIds(self.selectedSubTypeId);
-        subChildIds.push(self.selectedSubTypeId);
+        var selectedSubCat = self.flatCategories.find(function (c) { return c.category_id === self.selectedSubTypeId; });
+        var selectedSubName = selectedSubCat ? selectedSubCat.name : '';
         var filteredQuestions = self.allQuestions.filter(function (q) {
-          return subChildIds.indexOf(q.category_id) !== -1;
+          return q.type_name === selectedType.name && q.sub_type_name === selectedSubName;
         });
 
         // 정렬
@@ -350,12 +341,11 @@
         }
 
         // 선택된 세부 유형 이름 + 통계
-        var selectedSubType = self.flatCategories.find(function (c) { return c.category_id === self.selectedSubTypeId; });
-        var subTypeName = selectedSubType ? selectedSubType.name : '';
+        var subTypeName = selectedSubName;
 
         // 세부 유형 내 질문 수 / 세부유형 고유 클릭자 수 (% 계산용)
         var subTotalQuestions = Math.max(1, filteredQuestions.length);
-        var subTypeUniqueClickers = Math.max(1, (self.subTypeStats[self.selectedSubTypeId] || {}).unique_clickers || 0);
+        var subTypeUniqueClickers = Math.max(1, (self.subTypeStats[selectedSubName] || {}).unique_clickers || 0);
 
         html += '<div class="qna-faq-section">';
         html += '<div class="qna-faq-box">';
@@ -603,7 +593,7 @@
 
             // 데이터 새로고침
             var questionsRes = await self.apiGet('getQuestions', {
-              product_id: self.productId, sort: 'click_count', order: 'desc', page: 1, per_page: 9999
+              product_id: self.productId, sort: '클릭수', order: 'desc', page: 1, per_page: 9999
             });
             self.allQuestions = questionsRes.questions || [];
             self.renderCurrentView();

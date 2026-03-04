@@ -78,7 +78,7 @@ function handleSearchQuestions(params) {
   if (!productId || !query) return { error: 'product_id와 query는 필수입니다' };
 
   var questions = findRows('Questions', function(row) {
-    return String(row.product_id) === String(productId) && row.status !== 'hidden';
+    return String(row['제품ID']) === String(productId) && row['상태'] !== 'hidden';
   });
 
   if (questions.length === 0) {
@@ -87,7 +87,7 @@ function handleSearchQuestions(params) {
 
   // 질문 목록을 텍스트로 구성
   var qList = questions.map(function(q, i) {
-    return 'ID:' + q.question_id + ' Q:' + q.question_text;
+    return 'ID:' + q['질문ID'] + ' Q:' + q['질문내용'];
   }).join('\n');
 
   var systemPrompt = '당신은 Q&A 검색 도우미입니다. 사용자의 질문과 가장 유사한 기존 질문을 찾아주세요.\n' +
@@ -109,20 +109,21 @@ function handleSearchQuestions(params) {
 
     // question_id로 실제 데이터 매핑
     var qMap = {};
-    questions.forEach(function(q) { qMap[q.question_id] = q; });
+    questions.forEach(function(q) { qMap[q['질문ID']] = q; });
 
     var results = [];
     matches.forEach(function(m) {
       var q = qMap[m.question_id];
       if (q) {
         results.push({
-          question_id: q.question_id,
-          question_text: q.question_text,
-          answer_text: q.answer_text,
-          category_id: q.category_id,
-          status: q.status,
+          question_id: q['질문ID'],
+          question_text: q['질문내용'],
+          answer_text: q['답변내용'],
+          type: q['질문유형'],
+          sub_type: q['세부유형'],
+          status: q['상태'],
           score: m.score,
-          related_count: q.related_count || 1
+          related_count: q['관련질문수'] || 1
         });
       }
     });
@@ -148,11 +149,11 @@ function handleAiChat(body) {
 
   // 기존 Q&A 데이터 수집
   var questions = findRows('Questions', function(row) {
-    return String(row.product_id) === String(productId) && row.status === 'answered';
+    return String(row['제품ID']) === String(productId) && row['상태'] === 'answered';
   });
 
   var qaContext = questions.map(function(q) {
-    return 'Q: ' + q.question_text + '\nA: ' + q.answer_text;
+    return 'Q: ' + q['질문내용'] + '\nA: ' + q['답변내용'];
   }).join('\n\n');
 
   // 제품 정보 수집

@@ -548,71 +548,71 @@
     // 모든 질문은 level-2 카테고리에 할당
     var MOCK_QUESTIONS = [
       // 안전/위험 > 화상 위험 (아기/어린이)
-      { question_id:'Q_001', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'아이가 만져도 안전한 온도인가요?', answer_text:'표면 온도가 약 50~55°C로 성인에게는 따뜻한 수준이지만, 영유아는 피부가 민감하므로 장시간 접촉 시 저온화상 위험이 있습니다. 아이 손이 닿지 않는 높이(150cm 이상)에 설치하시길 권장합니다.', author_name:'김*수', created_at:'2026-02-28T11:00:00Z', status:'answered', click_count:487, related_count:38 },
-      { question_id:'Q_002', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'13개월 아기가 있는데 화상 위험 없나요?', answer_text:'영유아는 짧은 접촉으로도 저온화상 위험이 있습니다. 반드시 아기 손이 닿지 않는 높이에 설치해주세요. 안전 가드(별매)도 함께 사용하시면 좋습니다.', author_name:'이*진', created_at:'2026-02-27T09:30:00Z', status:'answered', click_count:412, related_count:29 },
-      { question_id:'Q_003', product_id:'PROD_001', category_id:'CAT_1_1', question_text:'표면 온도가 최대 몇 도까지 올라가나요?', answer_text:'최대 표면 온도는 약 55°C입니다. 일반 온수 파이프와 비슷한 온도로, 순간 접촉으로 화상이 나는 수준은 아니지만 장시간 접촉은 피해주세요.', author_name:'박*현', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:324, related_count:21 },
+      { question_id:'Q_001', product_id:'PROD_001', category_id:'CAT_1_1', type_name:'안전/위험', sub_type_name:'화상 위험 (아기/어린이)', question_text:'아이가 만져도 안전한 온도인가요?', answer_text:'표면 온도가 약 50~55°C로 성인에게는 따뜻한 수준이지만, 영유아는 피부가 민감하므로 장시간 접촉 시 저온화상 위험이 있습니다. 아이 손이 닿지 않는 높이(150cm 이상)에 설치하시길 권장합니다.', author_name:'김*수', created_at:'2026-02-28T11:00:00Z', status:'answered', click_count:487, related_count:38 },
+      { question_id:'Q_002', product_id:'PROD_001', category_id:'CAT_1_1', type_name:'안전/위험', sub_type_name:'화상 위험 (아기/어린이)', question_text:'13개월 아기가 있는데 화상 위험 없나요?', answer_text:'영유아는 짧은 접촉으로도 저온화상 위험이 있습니다. 반드시 아기 손이 닿지 않는 높이에 설치해주세요. 안전 가드(별매)도 함께 사용하시면 좋습니다.', author_name:'이*진', created_at:'2026-02-27T09:30:00Z', status:'answered', click_count:412, related_count:29 },
+      { question_id:'Q_003', product_id:'PROD_001', category_id:'CAT_1_1', type_name:'안전/위험', sub_type_name:'화상 위험 (아기/어린이)', question_text:'표면 온도가 최대 몇 도까지 올라가나요?', answer_text:'최대 표면 온도는 약 55°C입니다. 일반 온수 파이프와 비슷한 온도로, 순간 접촉으로 화상이 나는 수준은 아니지만 장시간 접촉은 피해주세요.', author_name:'박*현', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:324, related_count:21 },
       // 안전/위험 > 화재/과열 위험
-      { question_id:'Q_004', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'밤새 켜놔도 괜찮나요?', answer_text:'과열 방지 센서(온도 퓨즈)가 내장되어 있어 비정상 과열 시 자동 차단됩니다. 다만 안전을 위해 타이머 기능(2h/4h/8h) 사용을 권장합니다.', author_name:'최*아', created_at:'2026-02-27T15:00:00Z', status:'answered', click_count:523, related_count:42 },
-      { question_id:'Q_005', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'수건 없이 빈 상태로 켜도 되나요?', answer_text:'네, 빈 상태로 작동해도 안전합니다. 과열 방지 센서가 온도를 자동 제어합니다.', author_name:'정*호', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:278, related_count:18 },
-      { question_id:'Q_006', product_id:'PROD_001', category_id:'CAT_1_2', question_text:'과열 방지 기능이 있나요?', answer_text:'네, 온도 퓨즈와 써모스탯이 내장되어 설정 온도 초과 시 자동으로 전원이 차단됩니다.', author_name:'강*미', created_at:'2026-02-24T11:30:00Z', status:'answered', click_count:345, related_count:25 },
+      { question_id:'Q_004', product_id:'PROD_001', category_id:'CAT_1_2', type_name:'안전/위험', sub_type_name:'화재/과열 위험', question_text:'밤새 켜놔도 괜찮나요?', answer_text:'과열 방지 센서(온도 퓨즈)가 내장되어 있어 비정상 과열 시 자동 차단됩니다. 다만 안전을 위해 타이머 기능(2h/4h/8h) 사용을 권장합니다.', author_name:'최*아', created_at:'2026-02-27T15:00:00Z', status:'answered', click_count:523, related_count:42 },
+      { question_id:'Q_005', product_id:'PROD_001', category_id:'CAT_1_2', type_name:'안전/위험', sub_type_name:'화재/과열 위험', question_text:'수건 없이 빈 상태로 켜도 되나요?', answer_text:'네, 빈 상태로 작동해도 안전합니다. 과열 방지 센서가 온도를 자동 제어합니다.', author_name:'정*호', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:278, related_count:18 },
+      { question_id:'Q_006', product_id:'PROD_001', category_id:'CAT_1_2', type_name:'안전/위험', sub_type_name:'화재/과열 위험', question_text:'과열 방지 기능이 있나요?', answer_text:'네, 온도 퓨즈와 써모스탯이 내장되어 설정 온도 초과 시 자동으로 전원이 차단됩니다.', author_name:'강*미', created_at:'2026-02-24T11:30:00Z', status:'answered', click_count:345, related_count:25 },
       // 안전/위험 > 욕실 방수/감전
-      { question_id:'Q_007', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'샤워할 때 물이 튀어도 괜찮나요?', answer_text:'IPX4 방수등급으로 생활 방수 수준의 물 튀김에 안전합니다. 다만 직접 물을 끼얹는 것은 피해주세요.', author_name:'조*원', created_at:'2026-02-26T09:00:00Z', status:'answered', click_count:398, related_count:31 },
-      { question_id:'Q_008', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'방수등급이 어떻게 되나요?', answer_text:'IPX4 등급으로, 모든 방향에서의 물 튀김에 대해 보호됩니다.', author_name:'한*정', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:267, related_count:17 },
-      { question_id:'Q_009', product_id:'PROD_001', category_id:'CAT_1_3', question_text:'감전 사고 위험은 없나요?', answer_text:'이중 절연 구조와 접지 설계로 감전 위험을 최소화했습니다. KC 안전인증 제품입니다.', author_name:'윤*석', created_at:'2026-02-24T16:00:00Z', status:'answered', click_count:312, related_count:22 },
+      { question_id:'Q_007', product_id:'PROD_001', category_id:'CAT_1_3', type_name:'안전/위험', sub_type_name:'욕실 방수/감전', question_text:'샤워할 때 물이 튀어도 괜찮나요?', answer_text:'IPX4 방수등급으로 생활 방수 수준의 물 튀김에 안전합니다. 다만 직접 물을 끼얹는 것은 피해주세요.', author_name:'조*원', created_at:'2026-02-26T09:00:00Z', status:'answered', click_count:398, related_count:31 },
+      { question_id:'Q_008', product_id:'PROD_001', category_id:'CAT_1_3', type_name:'안전/위험', sub_type_name:'욕실 방수/감전', question_text:'방수등급이 어떻게 되나요?', answer_text:'IPX4 등급으로, 모든 방향에서의 물 튀김에 대해 보호됩니다.', author_name:'한*정', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_009', product_id:'PROD_001', category_id:'CAT_1_3', type_name:'안전/위험', sub_type_name:'욕실 방수/감전', question_text:'감전 사고 위험은 없나요?', answer_text:'이중 절연 구조와 접지 설계로 감전 위험을 최소화했습니다. KC 안전인증 제품입니다.', author_name:'윤*석', created_at:'2026-02-24T16:00:00Z', status:'answered', click_count:312, related_count:22 },
       // 설치/사용 > 설치 방법
-      { question_id:'Q_010', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'벽에 구멍을 뚫어야 하나요?', answer_text:'기본 설치는 벽면 타공(나사 4개) 방식입니다. 부속품(앵커, 나사, 수평계)이 모두 포함되어 있습니다.', author_name:'서*리', created_at:'2026-02-27T10:00:00Z', status:'answered', click_count:456, related_count:35 },
-      { question_id:'Q_011', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'셀프 설치 가능한가요?', answer_text:'전동 드릴만 있으시면 30분 내 셀프 설치 가능합니다. 설치 영상 QR코드가 박스에 포함되어 있습니다.', author_name:'임*빈', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:389, related_count:28 },
-      { question_id:'Q_012', product_id:'PROD_001', category_id:'CAT_2_1', question_text:'석고보드 벽에도 설치 가능한가요?', answer_text:'석고보드 전용 앵커(토글볼트)를 사용하시면 설치 가능합니다. 별도 구매가 필요합니다.', author_name:'나*우', created_at:'2026-02-25T09:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_010', product_id:'PROD_001', category_id:'CAT_2_1', type_name:'설치/사용', sub_type_name:'설치 방법', question_text:'벽에 구멍을 뚫어야 하나요?', answer_text:'기본 설치는 벽면 타공(나사 4개) 방식입니다. 부속품(앵커, 나사, 수평계)이 모두 포함되어 있습니다.', author_name:'서*리', created_at:'2026-02-27T10:00:00Z', status:'answered', click_count:456, related_count:35 },
+      { question_id:'Q_011', product_id:'PROD_001', category_id:'CAT_2_1', type_name:'설치/사용', sub_type_name:'설치 방법', question_text:'셀프 설치 가능한가요?', answer_text:'전동 드릴만 있으시면 30분 내 셀프 설치 가능합니다. 설치 영상 QR코드가 박스에 포함되어 있습니다.', author_name:'임*빈', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:389, related_count:28 },
+      { question_id:'Q_012', product_id:'PROD_001', category_id:'CAT_2_1', type_name:'설치/사용', sub_type_name:'설치 방법', question_text:'석고보드 벽에도 설치 가능한가요?', answer_text:'석고보드 전용 앵커(토글볼트)를 사용하시면 설치 가능합니다. 별도 구매가 필요합니다.', author_name:'나*우', created_at:'2026-02-25T09:00:00Z', status:'answered', click_count:234, related_count:15 },
       // 설치/사용 > 설치 위치/공간
-      { question_id:'Q_013', product_id:'PROD_001', category_id:'CAT_2_2', question_text:'좁은 욕실(2평)에도 설치 가능한가요?', answer_text:'벽면 설치 제품이라 바닥 공간을 차지하지 않아 좁은 욕실에도 적합합니다.', author_name:'류*은', created_at:'2026-02-26T13:00:00Z', status:'answered', click_count:298, related_count:20 },
-      { question_id:'Q_014', product_id:'PROD_001', category_id:'CAT_2_2', question_text:'세탁실에 설치해도 되나요?', answer_text:'네, 세탁실/베란다/다용도실 어디든 콘센트만 있으면 설치 가능합니다.', author_name:'신*혁', created_at:'2026-02-25T15:00:00Z', status:'answered', click_count:187, related_count:12 },
+      { question_id:'Q_013', product_id:'PROD_001', category_id:'CAT_2_2', type_name:'설치/사용', sub_type_name:'설치 위치/공간', question_text:'좁은 욕실(2평)에도 설치 가능한가요?', answer_text:'벽면 설치 제품이라 바닥 공간을 차지하지 않아 좁은 욕실에도 적합합니다.', author_name:'류*은', created_at:'2026-02-26T13:00:00Z', status:'answered', click_count:298, related_count:20 },
+      { question_id:'Q_014', product_id:'PROD_001', category_id:'CAT_2_2', type_name:'설치/사용', sub_type_name:'설치 위치/공간', question_text:'세탁실에 설치해도 되나요?', answer_text:'네, 세탁실/베란다/다용도실 어디든 콘센트만 있으면 설치 가능합니다.', author_name:'신*혁', created_at:'2026-02-25T15:00:00Z', status:'answered', click_count:187, related_count:12 },
       // 설치/사용 > 사용법/조작
-      { question_id:'Q_015', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'수건 몇 장까지 걸 수 있나요?', answer_text:'일반 세면 수건 기준 3~4장, 대형 목욕 수건은 2장까지 걸 수 있습니다.', author_name:'장*희', created_at:'2026-02-27T08:30:00Z', status:'answered', click_count:445, related_count:34 },
-      { question_id:'Q_016', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'타이머 설정은 어떻게 하나요?', answer_text:'전원 버튼을 누를 때마다 2시간 → 4시간 → 8시간 → OFF 순으로 전환됩니다. LED로 현재 설정을 확인할 수 있습니다.', author_name:'오*준', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:367, related_count:26 },
-      { question_id:'Q_017', product_id:'PROD_001', category_id:'CAT_2_3', question_text:'작동 중 소음이 있나요?', answer_text:'무소음 전기 발열 방식으로 소음이 전혀 없습니다. 취침 중에도 사용 가능합니다.', author_name:'배*영', created_at:'2026-02-25T11:00:00Z', status:'answered', click_count:289, related_count:19 },
+      { question_id:'Q_015', product_id:'PROD_001', category_id:'CAT_2_3', type_name:'설치/사용', sub_type_name:'사용법/조작', question_text:'수건 몇 장까지 걸 수 있나요?', answer_text:'일반 세면 수건 기준 3~4장, 대형 목욕 수건은 2장까지 걸 수 있습니다.', author_name:'장*희', created_at:'2026-02-27T08:30:00Z', status:'answered', click_count:445, related_count:34 },
+      { question_id:'Q_016', product_id:'PROD_001', category_id:'CAT_2_3', type_name:'설치/사용', sub_type_name:'사용법/조작', question_text:'타이머 설정은 어떻게 하나요?', answer_text:'전원 버튼을 누를 때마다 2시간 → 4시간 → 8시간 → OFF 순으로 전환됩니다. LED로 현재 설정을 확인할 수 있습니다.', author_name:'오*준', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:367, related_count:26 },
+      { question_id:'Q_017', product_id:'PROD_001', category_id:'CAT_2_3', type_name:'설치/사용', sub_type_name:'사용법/조작', question_text:'작동 중 소음이 있나요?', answer_text:'무소음 전기 발열 방식으로 소음이 전혀 없습니다. 취침 중에도 사용 가능합니다.', author_name:'배*영', created_at:'2026-02-25T11:00:00Z', status:'answered', click_count:289, related_count:19 },
       // 제품 사양 > 크기/무게
-      { question_id:'Q_018', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'실제 사이즈가 어떻게 되나요?', answer_text:'가로 530mm × 세로 830mm × 돌출 125mm 입니다.', author_name:'허*연', created_at:'2026-02-26T14:30:00Z', status:'answered', click_count:312, related_count:22 },
-      { question_id:'Q_019', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'무게가 얼마나 나가나요?', answer_text:'본체 무게 약 5kg으로 설치 시 한 사람이 충분히 들 수 있습니다.', author_name:'문*찬', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:198, related_count:13 },
-      { question_id:'Q_020', product_id:'PROD_001', category_id:'CAT_3_1', question_text:'가로 바가 몇 개인가요?', answer_text:'가로 바 7개로 구성되어 수건 3~4장을 동시에 걸 수 있습니다.', author_name:'송*라', created_at:'2026-02-24T09:00:00Z', status:'answered', click_count:156, related_count:9 },
+      { question_id:'Q_018', product_id:'PROD_001', category_id:'CAT_3_1', type_name:'제품 사양', sub_type_name:'크기/무게', question_text:'실제 사이즈가 어떻게 되나요?', answer_text:'가로 530mm × 세로 830mm × 돌출 125mm 입니다.', author_name:'허*연', created_at:'2026-02-26T14:30:00Z', status:'answered', click_count:312, related_count:22 },
+      { question_id:'Q_019', product_id:'PROD_001', category_id:'CAT_3_1', type_name:'제품 사양', sub_type_name:'크기/무게', question_text:'무게가 얼마나 나가나요?', answer_text:'본체 무게 약 5kg으로 설치 시 한 사람이 충분히 들 수 있습니다.', author_name:'문*찬', created_at:'2026-02-25T10:00:00Z', status:'answered', click_count:198, related_count:13 },
+      { question_id:'Q_020', product_id:'PROD_001', category_id:'CAT_3_1', type_name:'제품 사양', sub_type_name:'크기/무게', question_text:'가로 바가 몇 개인가요?', answer_text:'가로 바 7개로 구성되어 수건 3~4장을 동시에 걸 수 있습니다.', author_name:'송*라', created_at:'2026-02-24T09:00:00Z', status:'answered', click_count:156, related_count:9 },
       // 제품 사양 > 성능/건조 시간
-      { question_id:'Q_021', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'수건이 완전히 마르는데 몇 시간 걸려요?', answer_text:'젖은 수건 기준 약 2~3시간이면 보송보송하게 건조됩니다. 반건조 수건은 1~2시간이면 충분합니다.', author_name:'홍*태', created_at:'2026-02-27T11:00:00Z', status:'answered', click_count:534, related_count:43 },
-      { question_id:'Q_022', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'겨울에도 잘 마르나요?', answer_text:'전기 발열 방식이라 외부 온도에 관계없이 일정한 건조 성능을 유지합니다.', author_name:'백*솔', created_at:'2026-02-26T09:30:00Z', status:'answered', click_count:287, related_count:19 },
-      { question_id:'Q_023', product_id:'PROD_001', category_id:'CAT_3_2', question_text:'수건 눅눅한 냄새가 사라지나요?', answer_text:'네, 지속적인 열 건조로 수건의 습기를 제거하여 눅눅한 냄새를 방지합니다.', author_name:'안*민', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:423, related_count:33 },
+      { question_id:'Q_021', product_id:'PROD_001', category_id:'CAT_3_2', type_name:'제품 사양', sub_type_name:'성능/건조 시간', question_text:'수건이 완전히 마르는데 몇 시간 걸려요?', answer_text:'젖은 수건 기준 약 2~3시간이면 보송보송하게 건조됩니다. 반건조 수건은 1~2시간이면 충분합니다.', author_name:'홍*태', created_at:'2026-02-27T11:00:00Z', status:'answered', click_count:534, related_count:43 },
+      { question_id:'Q_022', product_id:'PROD_001', category_id:'CAT_3_2', type_name:'제품 사양', sub_type_name:'성능/건조 시간', question_text:'겨울에도 잘 마르나요?', answer_text:'전기 발열 방식이라 외부 온도에 관계없이 일정한 건조 성능을 유지합니다.', author_name:'백*솔', created_at:'2026-02-26T09:30:00Z', status:'answered', click_count:287, related_count:19 },
+      { question_id:'Q_023', product_id:'PROD_001', category_id:'CAT_3_2', type_name:'제품 사양', sub_type_name:'성능/건조 시간', question_text:'수건 눅눅한 냄새가 사라지나요?', answer_text:'네, 지속적인 열 건조로 수건의 습기를 제거하여 눅눅한 냄새를 방지합니다.', author_name:'안*민', created_at:'2026-02-25T14:00:00Z', status:'answered', click_count:423, related_count:33 },
       // 제품 사양 > 재질/마감
-      { question_id:'Q_024', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'스테인리스 스틸인가요?', answer_text:'SUS304 스테인리스 스틸 재질로, 녹과 부식에 강합니다.', author_name:'유*지', created_at:'2026-02-26T11:30:00Z', status:'answered', click_count:265, related_count:17 },
-      { question_id:'Q_025', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'녹이 슬지 않나요?', answer_text:'SUS304 스테인리스 스틸로 녹 걱정 없습니다. 일반 욕실 환경에서 반영구적으로 사용 가능합니다.', author_name:'구*훈', created_at:'2026-02-25T16:00:00Z', status:'answered', click_count:312, related_count:23 },
-      { question_id:'Q_026', product_id:'PROD_001', category_id:'CAT_3_3', question_text:'무광 블랙 도장이 벗겨지지 않나요?', answer_text:'무광 블랙은 파우더코팅 처리로 일반 사용에서 벗겨지지 않습니다.', author_name:'양*서', created_at:'2026-02-24T10:00:00Z', status:'answered', click_count:198, related_count:11 },
+      { question_id:'Q_024', product_id:'PROD_001', category_id:'CAT_3_3', type_name:'제품 사양', sub_type_name:'재질/마감', question_text:'스테인리스 스틸인가요?', answer_text:'SUS304 스테인리스 스틸 재질로, 녹과 부식에 강합니다.', author_name:'유*지', created_at:'2026-02-26T11:30:00Z', status:'answered', click_count:265, related_count:17 },
+      { question_id:'Q_025', product_id:'PROD_001', category_id:'CAT_3_3', type_name:'제품 사양', sub_type_name:'재질/마감', question_text:'녹이 슬지 않나요?', answer_text:'SUS304 스테인리스 스틸로 녹 걱정 없습니다. 일반 욕실 환경에서 반영구적으로 사용 가능합니다.', author_name:'구*훈', created_at:'2026-02-25T16:00:00Z', status:'answered', click_count:312, related_count:23 },
+      { question_id:'Q_026', product_id:'PROD_001', category_id:'CAT_3_3', type_name:'제품 사양', sub_type_name:'재질/마감', question_text:'무광 블랙 도장이 벗겨지지 않나요?', answer_text:'무광 블랙은 파우더코팅 처리로 일반 사용에서 벗겨지지 않습니다.', author_name:'양*서', created_at:'2026-02-24T10:00:00Z', status:'answered', click_count:198, related_count:11 },
       // 전기/에너지 > 전기세/소비전력
-      { question_id:'Q_027', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'전기세가 많이 나오나요?', answer_text:'120W 저전력으로, 하루 4시간 사용 시 월 전기세 약 1,500원 정도입니다.', author_name:'노*율', created_at:'2026-02-28T09:00:00Z', status:'answered', click_count:612, related_count:48 },
-      { question_id:'Q_028', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'120W면 뭐랑 비슷한 수준인가요?', answer_text:'노트북(60~90W)보다 약간 높고, 헤어드라이기(1200W)의 1/10 수준입니다.', author_name:'전*경', created_at:'2026-02-27T13:00:00Z', status:'answered', click_count:345, related_count:24 },
-      { question_id:'Q_029', product_id:'PROD_001', category_id:'CAT_4_1', question_text:'하루 종일 켜놓으면 전기세 얼마나 나와요?', answer_text:'24시간 연속 사용 시 하루 약 350원, 월 약 10,500원 정도입니다.', author_name:'황*담', created_at:'2026-02-26T15:00:00Z', status:'answered', click_count:287, related_count:18 },
+      { question_id:'Q_027', product_id:'PROD_001', category_id:'CAT_4_1', type_name:'전기/에너지', sub_type_name:'전기세/소비전력', question_text:'전기세가 많이 나오나요?', answer_text:'120W 저전력으로, 하루 4시간 사용 시 월 전기세 약 1,500원 정도입니다.', author_name:'노*율', created_at:'2026-02-28T09:00:00Z', status:'answered', click_count:612, related_count:48 },
+      { question_id:'Q_028', product_id:'PROD_001', category_id:'CAT_4_1', type_name:'전기/에너지', sub_type_name:'전기세/소비전력', question_text:'120W면 뭐랑 비슷한 수준인가요?', answer_text:'노트북(60~90W)보다 약간 높고, 헤어드라이기(1200W)의 1/10 수준입니다.', author_name:'전*경', created_at:'2026-02-27T13:00:00Z', status:'answered', click_count:345, related_count:24 },
+      { question_id:'Q_029', product_id:'PROD_001', category_id:'CAT_4_1', type_name:'전기/에너지', sub_type_name:'전기세/소비전력', question_text:'하루 종일 켜놓으면 전기세 얼마나 나와요?', answer_text:'24시간 연속 사용 시 하루 약 350원, 월 약 10,500원 정도입니다.', author_name:'황*담', created_at:'2026-02-26T15:00:00Z', status:'answered', click_count:287, related_count:18 },
       // 전기/에너지 > 전원/콘센트
-      { question_id:'Q_030', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'욕실에 콘센트가 없으면 어떡하나요?', answer_text:'전기 기사를 통해 욕실 내 방수 콘센트를 설치하시거나, 문 틈 연장 케이블(별매)을 사용하실 수 있습니다.', author_name:'차*윤', created_at:'2026-02-27T10:30:00Z', status:'answered', click_count:378, related_count:27 },
-      { question_id:'Q_031', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'전원 코드 길이가 얼마나 되나요?', answer_text:'전원 코드는 약 1.5m입니다.', author_name:'곽*영', created_at:'2026-02-26T08:00:00Z', status:'answered', click_count:198, related_count:13 },
-      { question_id:'Q_032', product_id:'PROD_001', category_id:'CAT_4_2', question_text:'연장선/멀티탭에 꽂아도 되나요?', answer_text:'가능하지만, 방수 등급이 있는 멀티탭 사용을 권장합니다. 벽면 콘센트 직접 연결이 가장 안전합니다.', author_name:'하*름', created_at:'2026-02-25T12:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_030', product_id:'PROD_001', category_id:'CAT_4_2', type_name:'전기/에너지', sub_type_name:'전원/콘센트', question_text:'욕실에 콘센트가 없으면 어떡하나요?', answer_text:'전기 기사를 통해 욕실 내 방수 콘센트를 설치하시거나, 문 틈 연장 케이블(별매)을 사용하실 수 있습니다.', author_name:'차*윤', created_at:'2026-02-27T10:30:00Z', status:'answered', click_count:378, related_count:27 },
+      { question_id:'Q_031', product_id:'PROD_001', category_id:'CAT_4_2', type_name:'전기/에너지', sub_type_name:'전원/콘센트', question_text:'전원 코드 길이가 얼마나 되나요?', answer_text:'전원 코드는 약 1.5m입니다.', author_name:'곽*영', created_at:'2026-02-26T08:00:00Z', status:'answered', click_count:198, related_count:13 },
+      { question_id:'Q_032', product_id:'PROD_001', category_id:'CAT_4_2', type_name:'전기/에너지', sub_type_name:'전원/콘센트', question_text:'연장선/멀티탭에 꽂아도 되나요?', answer_text:'가능하지만, 방수 등급이 있는 멀티탭 사용을 권장합니다. 벽면 콘센트 직접 연결이 가장 안전합니다.', author_name:'하*름', created_at:'2026-02-25T12:00:00Z', status:'answered', click_count:234, related_count:15 },
       // 배송/교환 > 배송/설치 서비스
-      { question_id:'Q_033', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'무료 배송인가요?', answer_text:'전국 무료 배송입니다. 제주/도서산간 지역은 추가 배송비 3,000원이 발생합니다.', author_name:'민*기', created_at:'2026-02-27T14:00:00Z', status:'answered', click_count:312, related_count:22 },
-      { question_id:'Q_034', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'설치 기사가 와서 달아주나요?', answer_text:'기본 배송은 택배 배송이며, 유료 설치 서비스(별도 30,000원)를 신청하실 수 있습니다.', author_name:'권*나', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:245, related_count:16 },
-      { question_id:'Q_035', product_id:'PROD_001', category_id:'CAT_5_1', question_text:'주문 후 며칠 만에 받을 수 있나요?', answer_text:'결제 완료 후 1~2영업일 내 출고, 출고 후 1~2일 내 수령 가능합니다.', author_name:'표*진', created_at:'2026-02-25T09:30:00Z', status:'answered', click_count:198, related_count:12 },
+      { question_id:'Q_033', product_id:'PROD_001', category_id:'CAT_5_1', type_name:'배송/교환', sub_type_name:'배송/설치 서비스', question_text:'무료 배송인가요?', answer_text:'전국 무료 배송입니다. 제주/도서산간 지역은 추가 배송비 3,000원이 발생합니다.', author_name:'민*기', created_at:'2026-02-27T14:00:00Z', status:'answered', click_count:312, related_count:22 },
+      { question_id:'Q_034', product_id:'PROD_001', category_id:'CAT_5_1', type_name:'배송/교환', sub_type_name:'배송/설치 서비스', question_text:'설치 기사가 와서 달아주나요?', answer_text:'기본 배송은 택배 배송이며, 유료 설치 서비스(별도 30,000원)를 신청하실 수 있습니다.', author_name:'권*나', created_at:'2026-02-26T11:00:00Z', status:'answered', click_count:245, related_count:16 },
+      { question_id:'Q_035', product_id:'PROD_001', category_id:'CAT_5_1', type_name:'배송/교환', sub_type_name:'배송/설치 서비스', question_text:'주문 후 며칠 만에 받을 수 있나요?', answer_text:'결제 완료 후 1~2영업일 내 출고, 출고 후 1~2일 내 수령 가능합니다.', author_name:'표*진', created_at:'2026-02-25T09:30:00Z', status:'answered', click_count:198, related_count:12 },
       // 배송/교환 > 교환/반품
-      { question_id:'Q_036', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'설치 후에도 반품 가능한가요?', answer_text:'설치 후에는 반품이 어렵습니다. 설치 전 충분히 확인해주세요. 미개봉 시 7일 이내 반품 가능합니다.', author_name:'남*아', created_at:'2026-02-26T16:00:00Z', status:'answered', click_count:267, related_count:17 },
-      { question_id:'Q_037', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'불량이면 무상 교환 되나요?', answer_text:'수령 후 7일 이내 제품 불량 확인 시 무상 교환/환불 처리됩니다.', author_name:'도*현', created_at:'2026-02-25T13:00:00Z', status:'answered', click_count:198, related_count:12 },
-      { question_id:'Q_038', product_id:'PROD_001', category_id:'CAT_5_2', question_text:'색상 교환 가능한가요?', answer_text:'미개봉/미설치 상태에서 7일 이내 색상 교환 가능합니다. 왕복 배송비 6,000원이 발생합니다.', author_name:'심*율', created_at:'2026-02-24T14:30:00Z', status:'answered', click_count:145, related_count:8 },
+      { question_id:'Q_036', product_id:'PROD_001', category_id:'CAT_5_2', type_name:'배송/교환', sub_type_name:'교환/반품', question_text:'설치 후에도 반품 가능한가요?', answer_text:'설치 후에는 반품이 어렵습니다. 설치 전 충분히 확인해주세요. 미개봉 시 7일 이내 반품 가능합니다.', author_name:'남*아', created_at:'2026-02-26T16:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_037', product_id:'PROD_001', category_id:'CAT_5_2', type_name:'배송/교환', sub_type_name:'교환/반품', question_text:'불량이면 무상 교환 되나요?', answer_text:'수령 후 7일 이내 제품 불량 확인 시 무상 교환/환불 처리됩니다.', author_name:'도*현', created_at:'2026-02-25T13:00:00Z', status:'answered', click_count:198, related_count:12 },
+      { question_id:'Q_038', product_id:'PROD_001', category_id:'CAT_5_2', type_name:'배송/교환', sub_type_name:'교환/반품', question_text:'색상 교환 가능한가요?', answer_text:'미개봉/미설치 상태에서 7일 이내 색상 교환 가능합니다. 왕복 배송비 6,000원이 발생합니다.', author_name:'심*율', created_at:'2026-02-24T14:30:00Z', status:'answered', click_count:145, related_count:8 },
       // 관리/AS > 청소/관리법
-      { question_id:'Q_039', product_id:'PROD_001', category_id:'CAT_6_1', question_text:'청소는 어떻게 하나요?', answer_text:'부드러운 천에 중성세제를 묻혀 닦아주세요. 연마제나 철수세미는 사용하지 마세요.', author_name:'성*빈', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:234, related_count:15 },
-      { question_id:'Q_040', product_id:'PROD_001', category_id:'CAT_6_1', question_text:'물때가 끼면 어떻게 제거하나요?', answer_text:'식초를 희석한 물(1:3)로 닦아주시면 깔끔하게 제거됩니다.', author_name:'원*서', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:178, related_count:10 },
+      { question_id:'Q_039', product_id:'PROD_001', category_id:'CAT_6_1', type_name:'관리/AS', sub_type_name:'청소/관리법', question_text:'청소는 어떻게 하나요?', answer_text:'부드러운 천에 중성세제를 묻혀 닦아주세요. 연마제나 철수세미는 사용하지 마세요.', author_name:'성*빈', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_040', product_id:'PROD_001', category_id:'CAT_6_1', type_name:'관리/AS', sub_type_name:'청소/관리법', question_text:'물때가 끼면 어떻게 제거하나요?', answer_text:'식초를 희석한 물(1:3)로 닦아주시면 깔끔하게 제거됩니다.', author_name:'원*서', created_at:'2026-02-26T14:00:00Z', status:'answered', click_count:178, related_count:10 },
       // 관리/AS > 내구성/보증/AS
-      { question_id:'Q_041', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'보증기간이 얼마나 되나요?', answer_text:'제품 보증기간은 구매일로부터 2년입니다.', author_name:'김*수', created_at:'2026-02-27T11:30:00Z', status:'answered', click_count:298, related_count:20 },
-      { question_id:'Q_042', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'몇 년 정도 사용할 수 있나요?', answer_text:'정상 사용 시 10년 이상 사용 가능합니다. 발열체 수명은 약 30,000시간입니다.', author_name:'이*진', created_at:'2026-02-26T10:00:00Z', status:'answered', click_count:234, related_count:15 },
-      { question_id:'Q_043', product_id:'PROD_001', category_id:'CAT_6_2', question_text:'고장나면 AS는 어디서 받나요?', answer_text:'고객센터(1588-XXXX) 또는 카카오톡 채널로 접수하시면 방문/택배 AS 진행됩니다.', author_name:'박*현', created_at:'2026-02-25T15:30:00Z', status:'answered', click_count:187, related_count:11 },
+      { question_id:'Q_041', product_id:'PROD_001', category_id:'CAT_6_2', type_name:'관리/AS', sub_type_name:'내구성/보증/AS', question_text:'보증기간이 얼마나 되나요?', answer_text:'제품 보증기간은 구매일로부터 2년입니다.', author_name:'김*수', created_at:'2026-02-27T11:30:00Z', status:'answered', click_count:298, related_count:20 },
+      { question_id:'Q_042', product_id:'PROD_001', category_id:'CAT_6_2', type_name:'관리/AS', sub_type_name:'내구성/보증/AS', question_text:'몇 년 정도 사용할 수 있나요?', answer_text:'정상 사용 시 10년 이상 사용 가능합니다. 발열체 수명은 약 30,000시간입니다.', author_name:'이*진', created_at:'2026-02-26T10:00:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_043', product_id:'PROD_001', category_id:'CAT_6_2', type_name:'관리/AS', sub_type_name:'내구성/보증/AS', question_text:'고장나면 AS는 어디서 받나요?', answer_text:'고객센터(1588-XXXX) 또는 카카오톡 채널로 접수하시면 방문/택배 AS 진행됩니다.', author_name:'박*현', created_at:'2026-02-25T15:30:00Z', status:'answered', click_count:187, related_count:11 },
       // 가격/혜택 > 할인/쿠폰
-      { question_id:'Q_044', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'할인 행사 있나요?', answer_text:'현재 정가 129,000원에서 31% 할인된 89,000원에 판매 중입니다.', author_name:'최*아', created_at:'2026-02-28T10:00:00Z', status:'answered', click_count:345, related_count:25 },
-      { question_id:'Q_045', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'신규 회원 할인 있나요?', answer_text:'회원가입 시 5,000원 할인 쿠폰이 자동 발급됩니다.', author_name:'정*호', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:267, related_count:17 },
-      { question_id:'Q_046', product_id:'PROD_001', category_id:'CAT_7_1', question_text:'2개 사면 추가 할인 있나요?', answer_text:'2개 이상 구매 시 개당 5,000원 추가 할인됩니다.', author_name:'강*미', created_at:'2026-02-26T13:30:00Z', status:'answered', click_count:198, related_count:12 },
+      { question_id:'Q_044', product_id:'PROD_001', category_id:'CAT_7_1', type_name:'가격/혜택', sub_type_name:'할인/쿠폰', question_text:'할인 행사 있나요?', answer_text:'현재 정가 129,000원에서 31% 할인된 89,000원에 판매 중입니다.', author_name:'최*아', created_at:'2026-02-28T10:00:00Z', status:'answered', click_count:345, related_count:25 },
+      { question_id:'Q_045', product_id:'PROD_001', category_id:'CAT_7_1', type_name:'가격/혜택', sub_type_name:'할인/쿠폰', question_text:'신규 회원 할인 있나요?', answer_text:'회원가입 시 5,000원 할인 쿠폰이 자동 발급됩니다.', author_name:'정*호', created_at:'2026-02-27T09:00:00Z', status:'answered', click_count:267, related_count:17 },
+      { question_id:'Q_046', product_id:'PROD_001', category_id:'CAT_7_1', type_name:'가격/혜택', sub_type_name:'할인/쿠폰', question_text:'2개 사면 추가 할인 있나요?', answer_text:'2개 이상 구매 시 개당 5,000원 추가 할인됩니다.', author_name:'강*미', created_at:'2026-02-26T13:30:00Z', status:'answered', click_count:198, related_count:12 },
       // 가격/혜택 > 결제/적립
-      { question_id:'Q_047', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'무이자 할부 되나요?', answer_text:'삼성/신한/현대카드 3개월 무이자 할부 가능합니다.', author_name:'조*원', created_at:'2026-02-27T14:30:00Z', status:'answered', click_count:234, related_count:15 },
-      { question_id:'Q_048', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'카카오페이로 결제 가능한가요?', answer_text:'카카오페이, 네이버페이, 토스 모두 이용 가능합니다.', author_name:'한*정', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:178, related_count:10 },
-      { question_id:'Q_049', product_id:'PROD_001', category_id:'CAT_7_2', question_text:'리뷰 적립금이 있나요?', answer_text:'텍스트 리뷰 500원, 포토 리뷰 1,000원이 적립됩니다.', author_name:'윤*석', created_at:'2026-02-25T11:30:00Z', status:'answered', click_count:145, related_count:7 }
+      { question_id:'Q_047', product_id:'PROD_001', category_id:'CAT_7_2', type_name:'가격/혜택', sub_type_name:'결제/적립', question_text:'무이자 할부 되나요?', answer_text:'삼성/신한/현대카드 3개월 무이자 할부 가능합니다.', author_name:'조*원', created_at:'2026-02-27T14:30:00Z', status:'answered', click_count:234, related_count:15 },
+      { question_id:'Q_048', product_id:'PROD_001', category_id:'CAT_7_2', type_name:'가격/혜택', sub_type_name:'결제/적립', question_text:'카카오페이로 결제 가능한가요?', answer_text:'카카오페이, 네이버페이, 토스 모두 이용 가능합니다.', author_name:'한*정', created_at:'2026-02-26T10:30:00Z', status:'answered', click_count:178, related_count:10 },
+      { question_id:'Q_049', product_id:'PROD_001', category_id:'CAT_7_2', type_name:'가격/혜택', sub_type_name:'결제/적립', question_text:'리뷰 적립금이 있나요?', answer_text:'텍스트 리뷰 500원, 포토 리뷰 1,000원이 적립됩니다.', author_name:'윤*석', created_at:'2026-02-25T11:30:00Z', status:'answered', click_count:145, related_count:7 }
     ];
 
     // QnA 뱃지 동적 업데이트
@@ -732,27 +732,20 @@
 
       function buildQuestions(params) {
         var filtered = MOCK_QUESTIONS.filter(function(q) { return q.product_id === params.product_id; });
-        if (params.category_id) {
-          var catId = params.category_id;
-          var childIds = [catId];
-          MOCK_CATEGORIES.forEach(function(c) { if (c.parent_id === catId) childIds.push(c.category_id); });
-          filtered = filtered.filter(function(q) { return childIds.indexOf(q.category_id) !== -1; });
+        if (params.type) {
+          filtered = filtered.filter(function(q) { return q.type_name === params.type; });
         }
-        var sortBy = params.sort || 'click_count';
+        if (params.sub_type) {
+          filtered = filtered.filter(function(q) { return q.sub_type_name === params.sub_type; });
+        }
+        // 한글 키 매핑 (위젯에서 '클릭수' 등으로 요청)
+        var sortKeyMap = { '클릭수': 'click_count', '작성일': 'created_at' };
+        var sortBy = sortKeyMap[params.sort] || params.sort || 'click_count';
         var order = params.order || 'desc';
         filtered.sort(function(a, b) {
           var va = sortBy === 'created_at' ? new Date(a[sortBy]).getTime() : (Number(a[sortBy]) || 0);
           var vb = sortBy === 'created_at' ? new Date(b[sortBy]).getTime() : (Number(b[sortBy]) || 0);
           return order === 'asc' ? va - vb : vb - va;
-        });
-        var catMap = {};
-        MOCK_CATEGORIES.forEach(function(c) { catMap[c.category_id] = c; });
-        filtered = filtered.map(function(q) {
-          var path = [], cur = catMap[q.category_id];
-          while (cur) { path.unshift(cur.name); cur = cur.parent_id ? catMap[cur.parent_id] : null; }
-          q.category_path = path.join(' > ');
-          q.category_name = catMap[q.category_id] ? catMap[q.category_id].name : '';
-          return q;
         });
         var page = parseInt(params.page) || 1, perPage = parseInt(params.per_page) || 10;
         var start = (page - 1) * perPage;
@@ -771,41 +764,17 @@
       }
 
       function buildTypeStats() {
-        var level1Cats = MOCK_CATEGORIES.filter(function(c) { return Number(c.level) === 1; });
-        var level2Cats = MOCK_CATEGORIES.filter(function(c) { return Number(c.level) === 2; });
-        var catMap = {};
-        MOCK_CATEGORIES.forEach(function(c) { catMap[c.category_id] = c; });
-
-        function getLevel1Parent(catId) {
-          var cur = catMap[catId];
-          while (cur) {
-            if (Number(cur.level) === 1) return cur.category_id;
-            cur = cur.parent_id ? catMap[cur.parent_id] : null;
-          }
-          return catId;
-        }
-
-        function getLevel2Parent(catId) {
-          var cur = catMap[catId];
-          if (!cur) return null;
-          if (Number(cur.level) === 2) return cur.category_id;
-          while (cur && Number(cur.level) > 2) {
-            cur = cur.parent_id ? catMap[cur.parent_id] : null;
-          }
-          return cur && Number(cur.level) === 2 ? cur.category_id : null;
-        }
-
         var clickersPerType = {};
         var clickersPerSubType = {};
         var clickersPerQuestion = {};
         var questionersPerType = {};
         var allClickers = {};
 
-        // 질문자 집계
+        // 질문자 집계 (type_name 기반)
         MOCK_QUESTIONS.forEach(function(q) {
-          var l1 = getLevel1Parent(q.category_id);
-          if (!questionersPerType[l1]) questionersPerType[l1] = {};
-          questionersPerType[l1][q.author_name || 'anon'] = true;
+          var typeName = q.type_name || '';
+          if (!questionersPerType[typeName]) questionersPerType[typeName] = {};
+          questionersPerType[typeName][q.author_name || 'anon'] = true;
         });
 
         // 클릭자 시뮬레이션: 500명 회원이 각 3~8개 질문 클릭
@@ -815,18 +784,18 @@
           var shuffled = MOCK_QUESTIONS.slice().sort(function() { return 0.5 - Math.random(); });
           var picked = shuffled.slice(0, Math.min(clickCount, shuffled.length));
           picked.forEach(function(q) {
-            var l1 = getLevel1Parent(q.category_id);
-            var l2 = getLevel2Parent(q.category_id);
+            var typeName = q.type_name || '';
+            var subTypeName = q.sub_type_name || '';
 
-            // level-1 유형별
-            if (!clickersPerType[l1]) clickersPerType[l1] = {};
-            clickersPerType[l1][memberId] = true;
+            // 질문유형별
+            if (!clickersPerType[typeName]) clickersPerType[typeName] = {};
+            clickersPerType[typeName][memberId] = true;
             allClickers[memberId] = true;
 
-            // level-2 세부유형별
-            if (l2) {
-              if (!clickersPerSubType[l2]) clickersPerSubType[l2] = {};
-              clickersPerSubType[l2][memberId] = true;
+            // 세부유형별
+            if (subTypeName) {
+              if (!clickersPerSubType[subTypeName]) clickersPerSubType[subTypeName] = {};
+              clickersPerSubType[subTypeName][memberId] = true;
             }
 
             // 개별 질문별
@@ -836,17 +805,17 @@
         }
 
         var typeStats = {};
-        level1Cats.forEach(function(cat) {
-          typeStats[cat.category_id] = {
-            unique_clickers: clickersPerType[cat.category_id] ? Object.keys(clickersPerType[cat.category_id]).length : 0,
-            unique_questioners: questionersPerType[cat.category_id] ? Object.keys(questionersPerType[cat.category_id]).length : 0
+        Object.keys(clickersPerType).forEach(function(name) {
+          typeStats[name] = {
+            unique_clickers: Object.keys(clickersPerType[name]).length,
+            unique_questioners: questionersPerType[name] ? Object.keys(questionersPerType[name]).length : 0
           };
         });
 
         var subTypeStats = {};
-        level2Cats.forEach(function(cat) {
-          subTypeStats[cat.category_id] = {
-            unique_clickers: clickersPerSubType[cat.category_id] ? Object.keys(clickersPerSubType[cat.category_id]).length : 0
+        Object.keys(clickersPerSubType).forEach(function(name) {
+          subTypeStats[name] = {
+            unique_clickers: Object.keys(clickersPerSubType[name]).length
           };
         });
 
