@@ -658,13 +658,11 @@
           html += '</div>';
         });
       } else {
-        html += '<div class="qna-search-empty">유사한 질문을 찾지 못했습니다.</div>';
+        html += '<div class="qna-search-empty">';
+        html += '<div class="qna-search-empty-text">유사한 질문을 찾지 못했습니다.</div>';
+        html += '<button class="qna-ai-chat-open-btn" id="qna-ai-chat-open">AI 상담사에게 물어보기</button>';
+        html += '</div>';
       }
-
-      html += '<div class="qna-search-ai-prompt">';
-      html += '<p>원하는 답변을 찾지 못하셨나요?</p>';
-      html += '<button class="qna-ai-chat-open-btn" id="qna-ai-chat-open">AI 상담사에게 물어보기</button>';
-      html += '</div>';
 
       html += '</div>';
       return html;

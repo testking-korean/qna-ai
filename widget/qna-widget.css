@@ -982,21 +982,13 @@
 .qna-search-empty {
   padding: 24px 16px;
   text-align: center;
+}
+
+.qna-search-empty-text {
   font-size: 14px;
-  color: #999;
-}
-
-.qna-search-ai-prompt {
-  padding: 16px;
-  text-align: center;
-  background: var(--qna-bg-gray);
-  border-top: 1px solid var(--qna-border);
-}
-
-.qna-search-ai-prompt p {
-  font-size: 13px;
-  color: #666;
-  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
 }
 
 .qna-ai-chat-open-btn {
