@@ -237,11 +237,11 @@
         html += this.renderSearchResults();
       }
       html += '<div class="qna-browse-section">';
+      html += '<div class="qna-section-header-row">';
       html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
-      html += '<div class="qna-screen2">';
-
-      // 돌아가기 버튼 (nav-bar 바깥)
       html += '<button class="qna-back-btn" id="qna-back-btn">&larr; 돌아가기</button>';
+      html += '</div>';
+      html += '<div class="qna-screen2">';
 
       // 라디오 네비게이션 + 세부 유형 카드 (하나의 nav-bar 안)
       html += '<div class="qna-nav-bar">';
