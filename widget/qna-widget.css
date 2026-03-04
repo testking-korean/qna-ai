@@ -405,7 +405,13 @@
    대표 질문 FAQ
    ============================================ */
 .qna-faq-section {
-  margin-top: 16px;
+  margin-top: 0;
+}
+
+.qna-faq-box {
+  background: #fff;
+  border-radius: var(--qna-radius);
+  padding: 16px;
 }
 
 .qna-faq-header {

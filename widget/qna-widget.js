@@ -340,10 +340,10 @@
         }
       }
 
-      html += '</div>'; // .qna-nav-bar
-
-      // 대표 질문: 세부 유형이 선택된 경우에만 표시
+      // 대표 질문: 세부 유형이 선택된 경우 nav-bar 안에 표시
       if (self.selectedSubTypeId) {
+        html += '<div class="qna-sub-divider"></div>';
+
         const subChildIds = self.getDescendantIds(self.selectedSubTypeId);
         subChildIds.push(self.selectedSubTypeId);
         var filteredQuestions = self.allQuestions.filter(function (q) {
@@ -366,6 +366,7 @@
         var subTypeUniqueClickers = Math.max(1, (self.subTypeStats[self.selectedSubTypeId] || {}).unique_clickers || 0);
 
         html += '<div class="qna-faq-section">';
+        html += '<div class="qna-faq-box">';
         html += '<div class="qna-section-header-row">';
         html += '<div class="qna-faq-title">' + self.escapeHtml(subTypeName) + ' 대표 질문</div>';
         html += '<div class="qna-sort-row">';
@@ -410,8 +411,11 @@
             html += '<button class="qna-faq-more-btn" id="qna-faq-more">' + remaining + '개 더보기</button>';
           }
         }
+        html += '</div>'; // .qna-faq-box
         html += '</div>'; // .qna-faq-section
       }
+
+      html += '</div>'; // .qna-nav-bar
 
       html += '</div>'; // .qna-screen2
       html += '</div>'; // .qna-browse-section
