@@ -148,7 +148,7 @@
   flex-shrink: 1;
   flex-basis: calc(33.333% - 8px);
   min-width: 0;
-  background: #f6faff;
+  background: #fff;
   border: 1px solid var(--qna-border);
   border-radius: var(--qna-radius);
   padding: 12px 10px;
@@ -346,7 +346,7 @@
   flex-shrink: 1;
   flex-basis: calc(33.333% - 8px);
   min-width: 0;
-  background: #f6faff;
+  background: #fff;
   border: 1px solid var(--qna-border);
   border-radius: var(--qna-radius);
   padding: 12px 10px;
