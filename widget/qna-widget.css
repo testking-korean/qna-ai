@@ -982,6 +982,7 @@
 .qna-search-empty {
   padding: 24px 16px;
   text-align: center;
+  background: #f8f8f8;
 }
 
 .qna-search-empty-text {
