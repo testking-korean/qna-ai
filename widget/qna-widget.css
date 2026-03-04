@@ -56,6 +56,7 @@
   font-weight: 700;
   color: var(--qna-primary);
   margin-bottom: 12px;
+  line-height: 1;
 }
 
 .qna-section-header-row {
@@ -264,10 +265,12 @@
   align-items: center;
   gap: 4px;
   padding: 0;
+  margin: 0;
   border: none;
   background: none;
   color: #999;
   font-size: 13px;
+  line-height: 1;
   cursor: pointer;
   transition: color 0.2s;
   margin-bottom: 12px;
