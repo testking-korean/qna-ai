@@ -264,7 +264,6 @@
       });
 
       if (level2Cats.length > 0) {
-        html += '<div class="qna-sub-divider"></div>';
 
         if (!self.selectedSubTypeId) {
           // ── 카드 모드: 세부 유형을 카드로 표시 ──
@@ -342,7 +341,6 @@
 
       // 대표 질문: 세부 유형이 선택된 경우 nav-bar 안에 표시
       if (self.selectedSubTypeId) {
-        html += '<div class="qna-sub-divider"></div>';
 
         const subChildIds = self.getDescendantIds(self.selectedSubTypeId);
         subChildIds.push(self.selectedSubTypeId);
