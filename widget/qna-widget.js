@@ -163,9 +163,6 @@
       let html = '<div class="qna-main-section">';
       html += '<div class="qna-main-title">질문하기</div><div class="qna-main-title-divider"></div>';
       html += this.renderSearchBar();
-      if (this.searchResults !== null) {
-        html += this.renderSearchResults();
-      }
       html += '<div class="qna-browse-section">';
       html += '<div class="qna-section-header-row">';
       html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
@@ -233,9 +230,6 @@
       let html = '<div class="qna-main-section">';
       html += '<div class="qna-main-title">질문하기</div><div class="qna-main-title-divider"></div>';
       html += this.renderSearchBar();
-      if (this.searchResults !== null) {
-        html += this.renderSearchResults();
-      }
       html += '<div class="qna-browse-section">';
       html += '<div class="qna-section-header-row">';
       html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
@@ -633,6 +627,9 @@
       html += '<button class="qna-search-btn" id="qna-search-btn" ' + (this.searchLoading ? 'disabled' : '') + '>' + (this.searchLoading ? '검색 중...' : '검색') + '</button>';
       html += '</div>';
       html += '<div class="qna-search-hint">입력하시면 AI가 가장 유사한 질문과 답변을 찾아줍니다</div>';
+      if (this.searchResults !== null) {
+        html += this.renderSearchResults();
+      }
       html += '</div>';
       return html;
     }

@@ -899,8 +899,10 @@
    검색 결과
    ============================================ */
 .qna-search-results {
-  margin-bottom: 24px;
-  border: 1px solid var(--qna-border);
+  margin-top: 12px;
+  margin-bottom: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: var(--qna-radius);
   overflow: hidden;
 }
