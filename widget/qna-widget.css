@@ -327,8 +327,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -13px;
-  height: 2px;
+  bottom: -12px;
+  height: 1px;
   background: var(--qna-primary);
   border-radius: 1px;
 }
@@ -421,8 +421,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -13px;
-  height: 2px;
+  bottom: -12px;
+  height: 1px;
   background: var(--qna-primary);
   border-radius: 1px;
 }
@@ -431,7 +431,7 @@
    대표 질문 FAQ
    ============================================ */
 .qna-faq-section {
-  margin-top: 16px;
+  margin-top: 22px;
 }
 
 .qna-faq-box {
