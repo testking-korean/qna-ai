@@ -53,12 +53,10 @@ function initializeSheets() {
     }
   }
 
-  // 기본 설정값 세팅
+  // 기본 설정값 세팅 (Gemini API Key)
   var settingsSheet = getOrCreateSheet('Settings');
   if (settingsSheet.getLastRow() <= 1) {
-    settingsSheet.appendRow(['items_per_page', '10']);
-    settingsSheet.appendRow(['allow_anonymous_questions', 'true']);
-    settingsSheet.appendRow(['require_answer_approval', 'true']);
+    settingsSheet.appendRow(['gemini_api_key', '']);
   }
 
   // 사용법 시트 생성
@@ -109,9 +107,7 @@ function fillGuideSheet() {
     ['   - 클릭수는 위젯이 자동으로 업데이트함'],
     [''],
     ['4. Settings (설정)'],
-    ['   - items_per_page: 한 페이지에 표시할 질문 수 (기본 10)'],
-    ['   - allow_anonymous_questions: 익명 질문 허용 여부 (true/false)'],
-    ['   - require_answer_approval: 답변 승인 필요 여부 (true/false)'],
+    ['   - gemini_api_key: Gemini AI 기능 사용을 위한 API 키'],
     [''],
     ['───────────────────────────────────────────────────────────────'],
     ['■ 셀러가 직접 해야 하는 작업'],

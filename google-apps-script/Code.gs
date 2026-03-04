@@ -172,7 +172,7 @@ function handleGetQuestions(params) {
   var sortBy = params.sort || '작성일';
   var order = params.order || 'desc';
   var page = parseInt(params.page) || 1;
-  var perPage = parseInt(params.per_page) || parseInt(getSetting('items_per_page')) || 10;
+  var perPage = parseInt(params.per_page) || 10;
 
   // 해당 제품의 질문 가져오기
   var questions = findRows('Questions', function(row) {
