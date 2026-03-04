@@ -58,6 +58,23 @@
   margin-bottom: 12px;
 }
 
+.qna-section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.qna-section-header-row .qna-section-subtitle,
+.qna-section-header-row .qna-sub-type-label,
+.qna-section-header-row .qna-faq-title {
+  margin-bottom: 0;
+}
+
+.qna-section-header-row .qna-sort-row {
+  margin-bottom: 0;
+}
+
 .qna-browse-section {
   margin-top: 4px;
 }

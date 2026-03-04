@@ -167,12 +167,14 @@
         html += this.renderSearchResults();
       }
       html += '<div class="qna-browse-section">';
+      html += '<div class="qna-section-header-row">';
       html += '<div class="qna-section-subtitle">질문 직접 찾기</div>';
-      html += '<div class="qna-screen1">';
       html += '<div class="qna-sort-row">';
       html += '<button class="qna-sort-btn' + (self.typeSortBy === 'questions' ? ' active' : '') + '" data-sort="questions" data-target="type">질문 많은 순</button>';
       html += '<button class="qna-sort-btn' + (self.typeSortBy === 'clicks' ? ' active' : '') + '" data-sort="clicks" data-target="type">클릭 많은 순</button>';
       html += '</div>';
+      html += '</div>';
+      html += '<div class="qna-screen1">';
       html += '<div class="qna-type-grid">';
 
       typeData.forEach(function (item) {
@@ -263,7 +265,6 @@
 
       if (level2Cats.length > 0) {
         html += '<div class="qna-sub-divider"></div>';
-        html += '<div class="qna-sub-type-label">' + self.escapeHtml(selectedType.name) + ' 질문 세부 유형</div>';
 
         if (!self.selectedSubTypeId) {
           // ── 카드 모드: 세부 유형을 카드로 표시 ──
@@ -298,9 +299,12 @@
             subTypeData.sort(function (a, b) { return (b.qCount - a.qCount) || (b.subUniqueClickers - a.subUniqueClickers) || a.cat.name.localeCompare(b.cat.name); });
           }
 
+          html += '<div class="qna-section-header-row">';
+          html += '<div class="qna-sub-type-label">' + self.escapeHtml(selectedType.name) + ' 질문 세부 유형</div>';
           html += '<div class="qna-sort-row">';
           html += '<button class="qna-sort-btn' + (self.subTypeSortBy === 'questions' ? ' active' : '') + '" data-sort="questions" data-target="subtype">질문 많은 순</button>';
           html += '<button class="qna-sort-btn' + (self.subTypeSortBy === 'clicks' ? ' active' : '') + '" data-sort="clicks" data-target="subtype">클릭 많은 순</button>';
+          html += '</div>';
           html += '</div>';
 
           html += '<div class="qna-sub-type-grid">';
@@ -362,15 +366,14 @@
         var subTypeUniqueClickers = Math.max(1, (self.subTypeStats[self.selectedSubTypeId] || {}).unique_clickers || 0);
 
         html += '<div class="qna-faq-section">';
-        html += '<div class="qna-faq-header">';
+        html += '<div class="qna-section-header-row">';
         html += '<div class="qna-faq-title">' + self.escapeHtml(subTypeName) + ' 대표 질문</div>';
-        html += '</div>';
-        html += '<div class="qna-faq-desc">AI가 실제 질문을 정제하고 내용을 그룹화하였습니다</div>';
-
         html += '<div class="qna-sort-row">';
         html += '<button class="qna-sort-btn' + (self.faqSortBy === 'questions' ? ' active' : '') + '" data-sort="questions" data-target="faq">질문 많은 순</button>';
         html += '<button class="qna-sort-btn' + (self.faqSortBy === 'clicks' ? ' active' : '') + '" data-sort="clicks" data-target="faq">클릭 많은 순</button>';
         html += '</div>';
+        html += '</div>';
+        html += '<div class="qna-faq-desc">AI가 실제 질문을 정제하고 내용을 그룹화하였습니다</div>';
 
         if (filteredQuestions.length === 0) {
           html += '<div class="qna-empty">등록된 질문이 없습니다.</div>';
