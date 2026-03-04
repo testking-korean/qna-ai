@@ -42,7 +42,13 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--qna-text);
+  margin-bottom: 0;
+}
+
+.qna-main-title-divider {
+  border-bottom: 1px solid #d6d6d6;
   margin-bottom: 20px;
+  padding-top: 12px;
 }
 
 .qna-section-subtitle {
@@ -440,7 +446,6 @@
 }
 
 .qna-faq-q:hover {
-  background: #fafafa;
   border-radius: var(--qna-radius);
 }
 

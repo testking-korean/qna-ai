@@ -161,7 +161,7 @@
       var totalUniqueQuestioners = Math.max(1, typeData.reduce(function (sum, item) { return sum + item.uniqueQuestioners; }, 0));
 
       let html = '<div class="qna-main-section">';
-      html += '<div class="qna-main-title">질문하기</div>';
+      html += '<div class="qna-main-title">질문하기</div><div class="qna-main-title-divider"></div>';
       html += this.renderSearchBar();
       if (this.searchResults !== null) {
         html += this.renderSearchResults();
@@ -229,7 +229,7 @@
       typeData.sort(function (a, b) { return b.count - a.count; });
 
       let html = '<div class="qna-main-section">';
-      html += '<div class="qna-main-title">질문하기</div>';
+      html += '<div class="qna-main-title">질문하기</div><div class="qna-main-title-divider"></div>';
       html += this.renderSearchBar();
       if (this.searchResults !== null) {
         html += this.renderSearchResults();
@@ -621,8 +621,8 @@
     // AI 검색바
     // ============================================
     renderSearchBar() {
-      let html = '<div class="qna-search-section">';
-      html += '<div class="qna-section-subtitle">질문 검색</div>';
+      let html = '<div class="qna-section-subtitle">질문 검색</div>';
+      html += '<div class="qna-search-section">';
       html += '<div class="qna-search-bar">';
       html += '<input type="text" class="qna-search-input" id="qna-search-input" placeholder="궁금한 사항을 찾아보거나 입력하세요" value="' + this.escapeHtml(this.searchQuery) + '">';
       html += '<button class="qna-search-btn" id="qna-search-btn" ' + (this.searchLoading ? 'disabled' : '') + '>' + (this.searchLoading ? '검색 중...' : '검색') + '</button>';
