@@ -48,7 +48,7 @@
 .qna-section-subtitle {
   font-size: 15px;
   font-weight: 700;
-  color: var(--qna-text);
+  color: var(--qna-primary);
   margin-bottom: 12px;
 }
 
@@ -777,6 +777,11 @@
    ============================================ */
 .qna-search-section {
   margin-bottom: 20px;
+  padding: 16px;
+  background: var(--qna-primary-light);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-left: 3px solid var(--qna-primary);
+  border-radius: var(--qna-radius);
 }
 
 .qna-search-bar {
@@ -787,18 +792,19 @@
 .qna-search-input {
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid var(--qna-border);
+  border: 1.5px solid rgba(37, 99, 235, 0.25);
   border-radius: var(--qna-radius);
   font-size: 14px;
   font-family: inherit;
   color: var(--qna-text);
-  transition: border-color 0.2s;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .qna-search-input:focus {
   outline: none;
   border-color: var(--qna-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .qna-search-input::placeholder {
@@ -829,7 +835,7 @@
 
 .qna-search-hint {
   font-size: 12px;
-  color: #999;
+  color: #6b7fa3;
   margin-top: 6px;
   padding-left: 2px;
 }
