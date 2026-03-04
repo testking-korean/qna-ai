@@ -257,15 +257,6 @@ function handleGetQuestionDetail(params) {
   incrementCell('Questions', '질문ID', questionId, '클릭수', 1);
   question['클릭수'] = (Number(question['클릭수']) || 0) + 1;
 
-  // 클릭 로그 기록
-  if (params.session_id) {
-    addRow('ClickLog', {
-      question_id: questionId,
-      session_id: params.session_id,
-      clicked_at: new Date().toISOString()
-    }, 'log_id');
-  }
-
   return { success: true, question: mapQuestionToApi(question) };
 }
 
@@ -354,16 +345,9 @@ function handleTrackClick(body) {
   var questionId = body.question_id;
   if (!questionId) return { error: 'question_id 필수' };
 
-  incrementCell('Questions', '질문ID', questionId, '클릭수', 1);
+  var newCount = incrementCell('Questions', '질문ID', questionId, '클릭수', 1);
 
-  addRow('ClickLog', {
-    question_id: questionId,
-    session_id: body.session_id || '',
-    member_id: body.member_id || '',
-    clicked_at: new Date().toISOString()
-  }, 'log_id');
-
-  return { success: true };
+  return { success: true, click_count: newCount };
 }
 
 /**
@@ -409,10 +393,10 @@ function handleAnswerQuestion(body) {
 // ============================================
 
 /**
- * 질문유형별 고유 클릭자/질문자 수 반환
+ * 질문유형별 클릭/질문 통계 반환
  * GET ?action=getTypeStats&product_id=xxx
  *
- * Questions 시트의 질문유형/질문세부유형 컬럼을 직접 사용 (Categories 시트 불필요)
+ * ClickLog 없이 Questions 시트의 클릭수 컬럼만으로 집계
  */
 function handleGetTypeStats(params) {
   var productId = params.product_id;
@@ -420,89 +404,63 @@ function handleGetTypeStats(params) {
 
   var questions = findRowsByColumn('Questions', '제품ID', productId);
 
-  // question_id → 질문유형/질문세부유형 매핑
-  var questionToType = {};
-  var questionToSubType = {};
-  questions.forEach(function(q) {
-    questionToType[q['질문ID']] = q['질문유형'] || '';
-    questionToSubType[q['질문ID']] = q['질문세부유형'] || '';
-  });
+  var totalClicks = 0;
+  var typeStats = {};
+  var subTypeStats = {};
+  var questionClicks = {};
 
-  // ClickLog에서 고유 member_id 집계 (유형/질문세부유형/질문별)
-  var clickLogs = getAllRows('ClickLog');
-  var clickersPerType = {};
-  var clickersPerSubType = {};
-  var clickersPerQuestion = {};
-  var allClickers = {};
-
-  clickLogs.forEach(function(log) {
-    var memberId = log.member_id;
-    if (!memberId) return;
-
-    var typeName = questionToType[log.question_id];
-    if (!typeName) return;
-
-    // 질문유형별
-    if (!clickersPerType[typeName]) clickersPerType[typeName] = {};
-    clickersPerType[typeName][memberId] = true;
-    allClickers[memberId] = true;
-
-    // 질문세부유형별
-    var subTypeName = questionToSubType[log.question_id];
-    if (subTypeName) {
-      if (!clickersPerSubType[subTypeName]) clickersPerSubType[subTypeName] = {};
-      clickersPerSubType[subTypeName][memberId] = true;
-    }
-
-    // 개별 질문별
-    var qId = log.question_id;
-    if (!clickersPerQuestion[qId]) clickersPerQuestion[qId] = {};
-    clickersPerQuestion[qId][memberId] = true;
-  });
-
-  // 질문유형별 고유 질문자 수 (작성자 기반)
-  var questionersPerType = {};
   questions.forEach(function(q) {
     var typeName = q['질문유형'] || '';
-    if (!questionersPerType[typeName]) questionersPerType[typeName] = {};
-    questionersPerType[typeName][q['작성자'] || 'anonymous'] = true;
+    var subTypeName = q['질문세부유형'] || '';
+    var clicks = Number(q['클릭수']) || 0;
+    var author = q['작성자'] || 'anonymous';
+
+    totalClicks += clicks;
+    questionClicks[q['질문ID']] = clicks;
+
+    // 질문유형별 집계
+    if (typeName) {
+      if (!typeStats[typeName]) {
+        typeStats[typeName] = { total_clicks: 0, question_count: 0, questioners: {} };
+      }
+      typeStats[typeName].total_clicks += clicks;
+      typeStats[typeName].question_count++;
+      typeStats[typeName].questioners[author] = true;
+    }
+
+    // 질문세부유형별 집계
+    if (subTypeName) {
+      if (!subTypeStats[subTypeName]) {
+        subTypeStats[subTypeName] = { total_clicks: 0, question_count: 0 };
+      }
+      subTypeStats[subTypeName].total_clicks += clicks;
+      subTypeStats[subTypeName].question_count++;
+    }
   });
 
-  // 고유 질문유형 목록 수집
-  var typeNames = {};
-  var subTypeNames = {};
-  questions.forEach(function(q) {
-    if (q['질문유형']) typeNames[q['질문유형']] = true;
-    if (q['질문세부유형']) subTypeNames[q['질문세부유형']] = true;
-  });
-
-  var typeStats = {};
-  Object.keys(typeNames).forEach(function(name) {
-    typeStats[name] = {
-      unique_clickers: clickersPerType[name] ? Object.keys(clickersPerType[name]).length : 0,
-      unique_questioners: questionersPerType[name] ? Object.keys(questionersPerType[name]).length : 0
+  // 최종 형태로 변환
+  var typeResult = {};
+  Object.keys(typeStats).forEach(function(name) {
+    typeResult[name] = {
+      total_clicks: typeStats[name].total_clicks,
+      question_count: typeStats[name].question_count,
+      unique_questioners: Object.keys(typeStats[name].questioners).length
     };
   });
 
-  var subTypeStats = {};
-  Object.keys(subTypeNames).forEach(function(name) {
-    subTypeStats[name] = {
-      unique_clickers: clickersPerSubType[name] ? Object.keys(clickersPerSubType[name]).length : 0
+  var subTypeResult = {};
+  Object.keys(subTypeStats).forEach(function(name) {
+    subTypeResult[name] = {
+      total_clicks: subTypeStats[name].total_clicks,
+      question_count: subTypeStats[name].question_count
     };
-  });
-
-  // 개별 질문별 고유 클릭자 수
-  var questionClickerCounts = {};
-  questions.forEach(function(q) {
-    questionClickerCounts[q['질문ID']] = clickersPerQuestion[q['질문ID']]
-      ? Object.keys(clickersPerQuestion[q['질문ID']]).length : 0;
   });
 
   return {
     success: true,
-    total_unique_clickers: Object.keys(allClickers).length,
-    type_stats: typeStats,
-    sub_type_stats: subTypeStats,
-    question_clickers: questionClickerCounts
+    total_clicks: totalClicks,
+    type_stats: typeResult,
+    sub_type_stats: subTypeResult,
+    question_clicks: questionClicks
   };
 }

@@ -39,7 +39,6 @@ function initializeSheets() {
       '질문ID', '제품ID', '질문유형', '질문세부유형', '대표질문그룹', '질문내용', '답변내용',
       '작성자', '작성일', '상태', '클릭수', '관련질문수'
     ],
-    'ClickLog': ['log_id', 'question_id', 'session_id', 'member_id', 'clicked_at'],
     'Settings': ['key', 'value']
   };
 
@@ -109,11 +108,7 @@ function fillGuideSheet() {
     ['   - 상태 값: pending(답변대기) / answered(답변완료) / hidden(숨김)'],
     ['   - 클릭수는 위젯이 자동으로 업데이트함'],
     [''],
-    ['4. ClickLog (클릭 추적)'],
-    ['   - 고객이 질문을 클릭할 때마다 자동 기록됨 (수동 입력 불필요)'],
-    ['   - 컬럼: log_id | question_id | session_id | member_id | clicked_at'],
-    [''],
-    ['5. Settings (설정)'],
+    ['4. Settings (설정)'],
     ['   - items_per_page: 한 페이지에 표시할 질문 수 (기본 10)'],
     ['   - allow_anonymous_questions: 익명 질문 허용 여부 (true/false)'],
     ['   - require_answer_approval: 답변 승인 필요 여부 (true/false)'],
@@ -133,7 +128,7 @@ function fillGuideSheet() {
     ['───────────────────────────────────────────────────────────────'],
     [''],
     ['- 고객이 질문 등록 → Questions에 새 행 자동 추가'],
-    ['- 고객이 질문 클릭 → click_count +1 & ClickLog에 기록'],
+    ['- 고객이 질문 클릭 → Questions 시트의 클릭수 +1 (쿠키로 유니크 체크)'],
     [''],
     ['───────────────────────────────────────────────────────────────'],
     ['■ 카페24 삽입 코드'],
