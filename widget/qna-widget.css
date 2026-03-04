@@ -435,6 +435,7 @@
 
 .qna-faq-box {
   background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: var(--qna-radius);
   padding: 16px;
 }
