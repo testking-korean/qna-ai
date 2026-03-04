@@ -274,7 +274,6 @@
   line-height: 1;
   cursor: pointer;
   transition: color 0.2s;
-  margin-bottom: 12px;
 }
 
 .qna-back-btn:hover {
