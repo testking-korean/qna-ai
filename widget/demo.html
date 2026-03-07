@@ -630,8 +630,8 @@
 
       window.fetch = function(url, options) {
         var urlStr = typeof url === 'string' ? url : url.toString();
-        var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-        if (!isLocal) return originalFetch.apply(this, arguments);
+        /* 항상 실제 API 사용 (스프레드시트 연결) */
+        return originalFetch.apply(this, arguments);
 
         if (options && options.method === 'POST') {
           var body = JSON.parse(options.body);
